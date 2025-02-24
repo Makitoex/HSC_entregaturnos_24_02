@@ -1,0 +1,274 @@
+/* Reset básico */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+/* Estilos Generales */
+body {
+    background-color: #f4f4f4;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    padding-left: 220px; /* Espacio para el menú lateral */
+    font-size: 12px; /* Reducir el tamaño de la fuente global */
+    line-height: 1.5; /* Ajustar el espaciado entre líneas */
+}
+
+/* Contenedor Principal */
+.container {
+    background: white;
+    padding: 15px; /* Reducir el espacio interno */
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    width: 80%; /* Hacer el contenedor más pequeño */
+    max-width: 800px;
+    margin: 15px auto; /* Reducir el margen */
+}
+
+/* Título */
+h1 {
+    color: #222; /* Color más oscuro para mejor contraste */
+    font-size: 28px; /* Reducir el tamaño del título */
+    font-weight: bold; /* Hace que el título resalte más */
+    margin-bottom: 15px;
+    text-align: left; /* Alineado a la izquierda */
+    padding-left: 20px; /* Espacio desde el borde izquierdo */
+    border-left: 12px solid #a30b0b; /* Barra decorativa azul en el lado izquierdo */
+    padding: 10px 20px;
+    background-color: #f8f9fa; /* Un fondo sutil para destacarlo */
+    border-radius: 5px; /* Bordes redondeados para un look moderno */
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1); /* Sombra sutil para profundidad */
+}
+
+/* Menú */
+.menu {
+    display: flex;
+    justify-content: right; /* Centra horizontalmente */
+    align-items: center; /* Centra verticalmente */
+    text-align: center; /* Asegura que el texto dentro también esté centrado */
+}
+
+.menu a, .login-btn {
+    display: inline-block;
+    padding: 8px 15px; /* Reducir el padding */
+    font-size: 14px; /* Reducir el tamaño de la fuente */
+    width: auto;
+    max-width: 200px;
+    text-align: center;
+    background: #0056b3;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+    transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.menu a:hover {
+    background: #004494;
+    transform: scale(1.05);
+}
+
+/* 🔹 Botón de Cerrar Sesión */
+.logout-btn {
+    background-color: #b02a37;
+}
+
+.logout-btn:hover {
+    background-color: #a02430;
+}
+
+/* 🔹 Menú Lateral */
+.sidenav {
+    height: 100%;
+    width: 180px; /* Reducir el tamaño del menú lateral */
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: #990f0f;
+    padding-top: 15px;
+    text-align: center;
+}
+
+/* Logo en el menú lateral */
+.sidenav img.logo {
+    width: 110px;
+    height: 110px;
+    display: block;
+    margin: 0 auto 15px;
+    border-radius: 50%;
+}
+
+/* 🔹 Links del Menú Lateral */
+.sidenav a, .dropdown-btn {
+    padding: 10px;
+    text-decoration: none;
+    font-size: 16px; /* Reducir el tamaño de las fuentes del menú */
+    color: #ffffff;
+    display: block;
+    transition: background 0.3s ease, color 0.3s ease;
+    border-radius: 5px;
+}
+
+.sidenav a:hover {
+    background: #0056b3;
+    color: white;
+}
+
+/* 🔹 Dropdown (Submenú Oculto) */
+.dropdown-container {
+    display: none;
+    background-color: #262626;
+    padding-left: 16px;
+}
+
+.fa-caret-down {
+    float: right;
+    padding-right: 8px;
+}
+
+/* 🔹 Ajuste del Contenido Principal */
+.main {
+    margin-left: 220px;
+    font-size: 18px;
+    padding: 10px;
+}
+
+/* 🔹 Título del menú lateral */
+.menu-title {
+    color: white;
+    text-align: center;
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+/* 🔹 Información del Usuario */
+.user-info {
+    text-align: center;
+    color: white;
+    font-size: 13px;
+    margin-bottom: 15px;
+}
+
+/* 🔹 Icono de usuario */
+.user-icon {
+    width: 65px;
+    height: 65px;
+    border-radius: 50%;
+    margin-bottom: 10px;
+    background-color: white;
+}
+
+/* 🔹 Responsivo para Pantallas Pequeñas */
+@media screen and (max-width: 768px) {
+    .sidenav {
+        width: 100%;
+        height: auto;
+        position: relative;
+    }
+
+    body {
+        padding-left: 0;
+        display: block;
+    }
+
+    .main {
+        margin-left: 0;
+    }
+
+    .container {
+        width: 100%;
+        padding: 10px;
+    }
+
+    .menu a, .login-btn {
+        font-size: 14px; /* Ajustar el tamaño de los botones en pantallas pequeñas */
+        padding: 8px 15px;
+    }
+
+    h1 {
+        font-size: 24px; /* Reducir el tamaño de los títulos en pantallas pequeñas */
+    }
+}
+
+/* Tabla */
+table {
+    width: 90%; /* Reducir el ancho de la tabla */
+    margin-top: 20px;
+    background: #f4f4f4; /* Color de fondo gris claro */
+    border-collapse: collapse;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+th, td {
+    padding: 8px; /* Reducir el padding de las celdas */
+    font-size: 14px; /* Reducir el tamaño de la fuente */
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+    background-color: #f8f8f8; /* Fondo gris más oscuro para las celdas */
+}
+
+th {
+    background-color: #e0e0e0; /* Fondo más oscuro para los encabezados */
+}
+
+/* Estilos para el contenedor de la barra de búsqueda y botón "Entregar Turno" */
+.search-container {
+    display: flex;
+    justify-content: flex-start; /* Alinea la barra de búsqueda a la izquierda */
+    align-items: center; /* Alinea la barra verticalmente */
+    width: 100%;
+    max-width: 800px; /* Si deseas limitar el ancho */
+    margin-top: 20px;
+}
+
+/* Estilos de la barra de búsqueda */
+.search-bar {
+    width: 80%; /* Ajusta el tamaño de la barra */
+    padding: 8px;
+    font-size: 14px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+}
+
+/* Estilos del botón Entregar Turno */
+.entregar-btn {
+    padding: 10px 20px;
+    font-size: 14px;
+    background-color: #28a745; /* Color verde */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    position: absolute; /* Posicionamiento absoluto para sacarlo del flujo */
+    right: 20px; /* Alineado al lado derecho */
+    top: 20px; /* Alineado al mismo nivel que la barra de búsqueda */
+}
+
+.entregar-btn:hover {
+    background-color: #218838; /* Color verde oscuro en hover */
+}
+
+/* Ajustes para pantallas pequeñas */
+@media screen and (max-width: 768px) {
+    .search-container {
+        width: 100%;
+    }
+
+    .search-bar {
+        width: 100%; /* Barra de búsqueda ocupa todo el ancho */
+    }
+
+    .entregar-btn {
+        width: 100%; /* Botón ocupa todo el ancho en pantallas pequeñas */
+        position: relative; /* Hace que el botón esté dentro del flujo de la página */
+        top: 0;
+        right: 0;
+    }
+}

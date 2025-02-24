@@ -1,0 +1,74 @@
+body {
+    font-family: sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4; /* Color de fondo ligeramente gris */
+}
+
+.container {
+    width: 100%;
+    margin: 0 auto;
+    padding: 30px;
+    border: 2px solid #aaa; /* Bordes más oscuros */
+    border-radius: 5px;
+    background-color: #fff;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Sombra más oscura para profundidad */
+}
+
+
+img {
+    float: right;
+    margin-bottom: 10px;
+}
+
+table th, table td {
+    font-size: 12px;
+    padding: 8px;
+    text-align: center;
+    background-color: #f8f8f8; /* Color de fondo gris muy claro */
+    border: 1px solid #ccc; /* Bordes ligeramente más oscuros */
+}
+
+table th {
+    background-color: #e0e0e0; /* Color de fondo más oscuro para los encabezados */
+    font-weight: bold;
+}
+
+.table-responsive {
+    margin-top: 20px;
+}
+
+.navbar {
+    background-color: #b32d3a; /* Fondo más oscuro para el navbar */
+    padding: 10px 30px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Sombra suave y oscura */
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: white;
+    display: flex;
+    align-items: center;
+}
+
+.navbar-toggler-icon {
+    background-color: rgb(0, 0, 0);
+}
+
+.nav-link {
+    color: white !important;
+    font-size: 1rem;
+    transition: color 0.3s ease;
+}
+
+.nav-link:hover {
+    color: #941201 !important; /* Dorado más oscuro cuando se pasa el ratón */
+}
+
+/* Alineación en pantallas pequeñas */
+@media (max-width: 991px) {
+    .navbar-toggler-icon {
+        background-color: #fff;
+    }
+}
