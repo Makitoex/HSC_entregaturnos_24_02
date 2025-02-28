@@ -9,16 +9,15 @@ $username = "root";
 $password = "";            
 $dbname = "sistema_entrega_turnos_hsc"; 
 
-// CEAR CONECCION
+// CREAR CONEXION
 $mysqli = new mysqli($servername, $username, $password, $dbname);
-
 
 // Verificar conexión
 if ($mysqli->connect_error) {
     die("Error de conexión: " . $mysqli->connect_error);
 }
 
-// CONSULTA DE LAS 43 COLUMNAS ASIGNADAS AL FORM
+// CONSULTA DE LAS 48 COLUMNAS ASIGNADAS AL FORM
 $stmt = $mysqli->prepare("INSERT INTO formulario_turnos_uti_enfermeros (
     fecha, tipoturno, medico_turno, tens_turno, auxiliar_turno, kinesiologo_turno, 
     control_medico_residente, carro_paros, botiquin, 
@@ -31,14 +30,16 @@ $stmt = $mysqli->prepare("INSERT INTO formulario_turnos_uti_enfermeros (
     medicamento_morfina, medicamento_midazolam_5mg, medicamento_midazolam_50mg, 
     medicamento_fentanilo_0_1mg, medicamento_fentanilo_0_5mg, medicamento_otros, 
     traslados_detalle, eventos_detalle, comentarios_detalle, 
-    funcionario_saliente_1, funcionario_saliente_2, contrasena_saliente_1, contrasena_saliente_2, 
-    funcionario_entrante_1, funcionario_entrante_2
-) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+    funcionario_saliente_1, nombre_funcionario_saliente_1, funcionario_saliente_2, nombre_funcionario_saliente_2, 
+    contrasena_saliente_1, contrasena_saliente_2, funcionario_entrante_1, nombre_funcionario_entrante_1, funcionario_entrante_2, nombre_funcionario_entrante_2
+) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? , ?)");
 
 // VERIFICA QUE LA CONSULTA ESTE CORRECTAMENTE INICIADA
 if (!$stmt) {
     die("Error en la preparación: " . $mysqli->error);
 }
+
+var_dump($_POST['nombre_funcionario_saliente_1'], $_POST['nombre_funcionario_saliente_2'], $_POST['nombre_funcionario_entrante_1'], $_POST['nombre_funcionario_entrante_2']);
 
 // VARIABLES A INSERTAR
 $fecha = $_POST['fecha'];
@@ -85,9 +86,15 @@ $contrasena_saliente_2 = $_POST['contrasena_saliente_2'];
 $funcionario_entrante_1 = $_POST['funcionario_entrante_1'];
 $funcionario_entrante_2 = $_POST['funcionario_entrante_2'];
 
+// CAPTURAR LOS NOMBRES DE LOS FUNCIONARIOS
+$nombre_funcionario_saliente_1 = $_POST['nombre_funcionario_saliente_1'];
+$nombre_funcionario_saliente_2 = $_POST['nombre_funcionario_saliente_2'];
+$nombre_funcionario_entrante_1 = $_POST['nombre_funcionario_entrante_1'];
+$nombre_funcionario_entrante_2 = $_POST['nombre_funcionario_entrante_2'];
+
 // VALORES ASIGNADOS A LA CONSULTA
 $stmt->bind_param(
-    "sssssssssiiiisiiiiiiiiiiiiiiiiiiissssssssss",
+    "ssssssssssiiiisssssssssssssssssssssssssssssssss",
     $fecha, $tipoturno, $medico_turno, $tens_turno, $auxiliar_turno, $kinesiologo_turno, 
     $control_medico_residente, $carro_paros, $botiquin, 
     $camas_ocupadas, $camas_disponibles, $camas_reservadas, $cant_pacientes_fallecidos, 
@@ -99,8 +106,9 @@ $stmt->bind_param(
     $medicamento_morfina, $medicamento_midazolam_5mg, $medicamento_midazolam_50mg, 
     $medicamento_fentanilo_0_1mg, $medicamento_fentanilo_0_5mg, $medicamento_otros, 
     $traslados_detalle, $eventos_detalle, $comentarios_detalle, 
-    $funcionario_saliente_1, $funcionario_saliente_2, $contrasena_saliente_1, $contrasena_saliente_2, 
-    $funcionario_entrante_1, $funcionario_entrante_2
+    $funcionario_saliente_1, $nombre_funcionario_saliente_1, $funcionario_saliente_2, $nombre_funcionario_saliente_2, 
+    $contrasena_saliente_1, $contrasena_saliente_2, $funcionario_entrante_1, $nombre_funcionario_entrante_1, 
+    $funcionario_entrante_2, $nombre_funcionario_entrante_2
 );
 
 // EJECUTA LA CONSULTA 1 VEZ
@@ -119,6 +127,7 @@ if ($stmt->execute()) {
     echo "Error al insertar: " . $stmt->error;
 }
 
-// CIRRA CONSULTA Y CONEXION
+// CIERRA CONSULTA Y CONEXION
 $stmt->close();
 $mysqli->close();
+?>

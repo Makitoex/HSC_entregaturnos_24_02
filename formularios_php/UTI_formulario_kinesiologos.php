@@ -142,7 +142,7 @@ if (!$result) {
                 <!-- Kinesiologo Saliente 1 -->
                 <div class="col-md-6 mb-3">
                     <label for="funcionario_saliente_1">Kinesiologo Saliente 1</label>
-                    <select id="funcionario_saliente_1" name="funcionario_saliente_1" class="form-select form-select-sm" required>
+                    <select id="funcionario_saliente_1" name="funcionario_saliente_1" class="form-select form-select-sm" required onchange="setNombreYPinFuncionario('funcionario_saliente_1', 'nombre_funcionario_saliente_1', 'pin_funcionario_saliente_1')">
                         <option value="">-Seleccione Funcionario-</option>
                         <?php
                         mysqli_data_seek($result, 0); //vuelve a leer los datos del resultado
@@ -152,20 +152,22 @@ if (!$result) {
                                 $nombre_funcionarios = $row['nombre_funcionarios'];
                                 $rut_funcionarios = $row['rut_funcionarios'];
                                 $pin_funcionarios = $row['pin_funcionarios'];
-                                echo "<option value='$id_funcionarios' data-pin='$pin_funcionarios'>$nombre_funcionarios - $rut_funcionarios</option>";
+                                echo "<option value='$id_funcionarios' data-nombre='$nombre_funcionarios' data-pin='$pin_funcionarios'>$nombre_funcionarios - $rut_funcionarios</option>";
                             }
                         } else {
-                            echo "<option value=''>No hay enfermeros disponibles</option>";
+                            echo "<option value=''>No hay disponibles</option>";
                         }
                         ?>
                     </select>
+                    <input type="hidden" id="nombre_funcionario_saliente_1" name="nombre_funcionario_saliente_1">
+                    <input type="hidden" id="pin_funcionario_saliente_1" name="pin_funcionario_saliente_1">
                     <input type="password" id="contrasena_saliente_1" name="contrasena_saliente_1" placeholder="Ingrese Contraseña Kine.1" required class="form-control form-control-sm mt-2">
                 </div>
 
                 <!-- Kinesiologo Entrante 1 -->
                 <div class="col-md-6 mb-3">
                     <label for="funcionario_entrante_1">Kinesiologo Entrante 1</label>
-                    <select id="funcionario_entrante_1" name="funcionario_entrante_1" class="form-select form-select-sm" required>
+                    <select id="funcionario_entrante_1" name="funcionario_entrante_1" class="form-select form-select-sm" required onchange="setNombreYPinFuncionario('funcionario_entrante_1', 'nombre_funcionario_entrante_1', 'pin_funcionario_entrante_1')">
                         <option value="">-Seleccione Funcionario-</option>
                         <?php
                         mysqli_data_seek($result, 0); //vuelve a leer los datos del resultado
@@ -175,13 +177,15 @@ if (!$result) {
                                 $nombre_funcionarios = $row['nombre_funcionarios'];
                                 $rut_funcionarios = $row['rut_funcionarios'];
                                 $pin_funcionarios = $row['pin_funcionarios'];
-                                echo "<option value='$id_funcionarios' data-pin='$pin_funcionarios'>$nombre_funcionarios - $rut_funcionarios</option>";
+                                echo "<option value='$id_funcionarios' data-nombre='$nombre_funcionarios' data-pin='$pin_funcionarios'>$nombre_funcionarios - $rut_funcionarios</option>";
                             }
                         } else {
                             echo "<option value=''>No hay Kine disponibles</option>";
                         }
                         ?>
                     </select>
+                    <input type="hidden" id="nombre_funcionario_entrante_1" name="nombre_funcionario_entrante_1">
+                    <input type="hidden" id="pin_funcionario_entrante_1" name="pin_funcionario_entrante_1">
                 </div>
             </div>
 
@@ -194,9 +198,60 @@ if (!$result) {
         </form>
     </div>
 
+    <script>
+        function setNombreYPinFuncionario(selectId, nombreId, pinId) {
+            var selectElement = document.getElementById(selectId);
+            var selectedOption = selectElement.options[selectElement.selectedIndex];
+            var nombreFuncionario = selectedOption.getAttribute('data-nombre');
+            var pinFuncionario = selectedOption.getAttribute('data-pin');
+
+            document.getElementById(nombreId).value = nombreFuncionario;
+            document.getElementById(pinId).value = pinFuncionario;
+        }
+
+        function validarYEnviarkine(event) {
+            const funcionario1 = document.getElementById('funcionario_saliente_1');
+            const contraseña1 = document.getElementById('contrasena_saliente_1');
+
+            if (!funcionario1 || !contraseña1) {
+                alert('Error: No se encontraron los campos de funcionarios o PIN.');
+                event.preventDefault();
+                return false;
+            }
+
+            // Verificar que se haya seleccionado un funcionario
+            if (funcionario1.value === "") {
+                alert('Por favor, selecciona el funcionario.');
+                event.preventDefault();
+                return false;
+            }
+
+            // Obtener el PIN
+            const pinCorrecto1 = funcionario1.options[funcionario1.selectedIndex].getAttribute('data-pin');
+
+            if (!pinCorrecto1) {
+                alert('Error: No se encontró el PIN del funcionario.');
+                event.preventDefault();
+                return false;
+            }
+
+            if (contraseña1.value.trim() !== pinCorrecto1.trim()) {
+                alert('El PIN del Funcionario es incorrecto.');
+                event.preventDefault();
+                return false;
+            }
+
+            return true;
+        }
+
+        document.querySelector('form').addEventListener('submit', function(event) {
+            if (!validarYEnviarkine(event)) {
+                event.preventDefault();
+            }
+        });
+    </script>
     <script src="/js/funcion_agregarfuncionario.js"></script>
     <script src="/js/funcion_obtenerpin.js"></script>
-    <script src="/js/funcion_validaryEnviarkine.js"></script>
     <script src="/js/funcion_mostrarcampotexto.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-1CmRugG5aX5+I65R5BxDJjkGrtGk5r0PZ8iFv/V3+6Q/3D3De0hN/y4XXMn+Q3fj" crossorigin="anonymous"></script>
 </body>

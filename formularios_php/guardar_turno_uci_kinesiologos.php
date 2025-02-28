@@ -23,6 +23,8 @@ $cantidad_setsuccion = isset($_POST['cantidad_setsuccion']) ? $_POST['cantidad_s
 $funcionario_saliente_1 = isset($_POST['funcionario_saliente_1']) ? $_POST['funcionario_saliente_1'] : null;
 $contrasena_saliente_1 = isset($_POST['contrasena_saliente_1']) ? $_POST['contrasena_saliente_1']: null;
 $funcionario_entrante_1 = isset($_POST['funcionario_entrante_1']) ? $_POST['funcionario_entrante_1'] : null;
+$nombre_funcionario_saliente_1 = isset($_POST['nombre_funcionario_saliente_1']) ? $_POST['nombre_funcionario_saliente_1'] : null;
+$nombre_funcionario_entrante_1 = isset($_POST['nombre_funcionario_entrante_1']) ? $_POST['nombre_funcionario_entrante_1'] : null;
 
 //FUNCION PARA DETERMINAR DIA DE LA SEMANA DEPENDIENDO EL DIA 0 A 6 EN PHP
 function esDomingo($fecha) {
@@ -78,7 +80,9 @@ $sql = "INSERT INTO formulario_turnos_uci_kinesiologos (
     cantidad_setsuccion,
     funcionario_saliente_1,
     contrasena_saliente_1,
+    nombre_funcionario_saliente_1,
     funcionario_entrante_1,
+    nombre_funcionario_entrante_1,
     filtros_hme,
     filtros_antibacterianos,
     filtros_traqueostomia,
@@ -92,11 +96,9 @@ $sql = "INSERT INTO formulario_turnos_uci_kinesiologos (
     mascarillas_talla_l,
     mascarillas_talla_xl,
     set_succion_unidad
-) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-
+) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
 $stmt = $conn->prepare($sql);
-
 
 if ($stmt === false) {
     die("Error preparing the statement: " . $conn->error);
@@ -104,7 +106,7 @@ if ($stmt === false) {
 
 // PARAMETROS ENTREGADOS BIND
 $stmt->bind_param(
-    "ssiiissssisssiiiiiiiiiiiiii",
+    "ssiiissssissssiiissiiiiiiiiii",
     $fecha,
     $tipoturno,
     $es_domingo,
@@ -118,7 +120,9 @@ $stmt->bind_param(
     $cantidad_setsuccion,
     $funcionario_saliente_1,
     $contrasena_saliente_1,
+    $nombre_funcionario_saliente_1,
     $funcionario_entrante_1,
+    $nombre_funcionario_entrante_1,
     $filtros_hme,
     $filtros_antibacterianos,
     $filtros_traqueostomia,

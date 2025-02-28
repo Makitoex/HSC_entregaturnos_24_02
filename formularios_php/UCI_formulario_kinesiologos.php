@@ -1,25 +1,31 @@
 <?php
 session_start();
 
+// Check if the user is logged in, if not redirect to login page
 if (!isset($_SESSION['id_usuarios'])) {
     header("Location: index.php");
     exit();
 }
 
-// Errores
+// Display errors
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-// Incluir archivo de conexión con ruta relativa
+// Include the database connection file
 include '/laragon/www/Sistema_entrega_turnos_HSC/conexion.php';
 
-// Establecer la codificación de caracteres
+// Check if the connection was successful
+if (!$conn) {
+    die("Connection failed: " . mysqli_connect_error());
+}
+
+// Set character encoding
 mysqli_set_charset($conn, "utf8mb4");
 
 $fecha_actual = date("Y-m-d");
 
-// CONSULTA PARA OBTENER LOS FUNCIONARIOS DE UCI QUE TIENEN id_servicio = 6
+// Query to get UCI staff with id_servicio = 6
 $sql = "SELECT id_funcionarios, id_profesion, nombre_funcionarios, rut_funcionarios, pin_funcionarios FROM funcionarios_uci WHERE id_servicio = 6 ORDER BY id_funcionarios";
 $result = mysqli_query($conn, $sql);
 
@@ -49,7 +55,7 @@ if (!$result) {
         <h2 class="text-center">Entrega De Turno Kinesiologos UCI</h2>
         <p class="text-center">Hospital Santa Cruz</p>
         <br>
-        <form action="guardar_turno_uci_kinesiologos.php" method="POST">
+        <form action="guardar_turno_uci_kinesiologos.php" method="POST" onsubmit="return validarYEnviarkineuci();">
             <!-- FECHA Y TURNO -->
             <div class="row mb-3">
                 <div class="col-md-2">
@@ -140,30 +146,7 @@ if (!$result) {
                 <!-- Kinesiologo Saliente 1 -->
                 <div class="col-md-6 mb-3">
                     <label for="funcionario_saliente_1">Kinesiologo Saliente 1</label>
-                    <select id="funcionario_saliente_1" name="funcionario_saliente_1" class="form-select form-select-sm" required>
-                        <option value="">-Seleccione Funcionario-</option>
-                        <?php
-                        mysqli_data_seek($result, 0); //vuelve a leer los datos del resultadd
-                        if (mysqli_num_rows($result) > 0) {
-                            while ($row = mysqli_fetch_assoc($result)) {
-                                $id_funcionarios = $row['id_funcionarios'];
-                                $nombre_funcionarios = $row['nombre_funcionarios'];
-                                $rut_funcionarios = $row['rut_funcionarios'];
-                                $pin_funcionarios = $row['pin_funcionarios']; 
-                                echo "<option value='$id_funcionarios' data-pin='$pin_funcionarios'>$nombre_funcionarios - $rut_funcionarios</option>";
-                            }
-                        } else {
-                            echo "<option value=''>No hay Kinesiologos disponibles</option>";
-                        }
-                        ?>
-                    </select>
-                    <input type="password" id="contrasena_saliente_1" name="contrasena_saliente_1" placeholder="Ingrese Contraseña Kine.1" required class="form-control form-control-sm mt-2">
-                </div>
-
-                <!-- Kinesiologo Entrante 1 -->
-                <div class="col-md-6 mb-3">
-                    <label for="funcionario_entrante_1">Kinesiologo Entrante 1</label>
-                    <select id="funcionario_entrante_1" name="funcionario_entrante_1" class="form-select form-select-sm" required>
+                    <select id="funcionario_saliente_1" name="funcionario_saliente_1" class="form-select form-select-sm" required onchange="setNombreFuncionario('funcionario_saliente_1', 'nombre_funcionario_saliente_1')">
                         <option value="">-Seleccione Funcionario-</option>
                         <?php
                         mysqli_data_seek($result, 0); //vuelve a leer los datos del resultado
@@ -173,87 +156,111 @@ if (!$result) {
                                 $nombre_funcionarios = $row['nombre_funcionarios'];
                                 $rut_funcionarios = $row['rut_funcionarios'];
                                 $pin_funcionarios = $row['pin_funcionarios'];
-                                echo "<option value='$id_funcionarios' data-pin='$pin_funcionarios'>$nombre_funcionarios - $rut_funcionarios</option>";
+                                echo "<option value='$id_funcionarios' data-nombre='$nombre_funcionarios' data-pin='$pin_funcionarios'>$nombre_funcionarios - $rut_funcionarios</option>";
                             }
                         } else {
-                            echo "<option value=''>No hay Kinesiologos disponibles</option>";
+                            echo "<option value=''>No hay Kine disponibles</option>";
                         }
                         ?>
                     </select>
+                    <input type="hidden" id="nombre_funcionario_saliente_1" name="nombre_funcionario_saliente_1">
+                    <input type="password" id="contrasena_saliente_1" name="contrasena_saliente_1" placeholder="Ingrese Contraseña Kine.1" required class="form-control form-control-sm mt-2">
                 </div>
-            </div>
 
-            <br><br>
+                <!-- Kinesiologo Entrante 1 -->
+                <div class="col-md-6 mb-3">
+                    <label for="funcionario_entrante_1">Kinesiologo Entrante 1</label>
+                    <select id="funcionario_entrante_1" name="funcionario_entrante_1" class="form-select form-select-sm" required onchange="setNombreFuncionario('funcionario_entrante_1', 'nombre_funcionario_entrante_1')">
+                        <option value="">-Seleccione Funcionario-</option>
+                        <?php
+                        mysqli_data_seek($result, 0); //vuelve a leer los datos del resultado
+                        if (mysqli_num_rows($result) > 0) {
+                            while ($row = mysqli_fetch_assoc($result)) {
+                                $id_funcionarios = $row['id_funcionarios'];
+                                $nombre_funcionarios = $row['nombre_funcionarios'];
+                                $rut_funcionarios = $row['rut_funcionarios'];
+                                $pin_funcionarios = $row['pin_funcionarios'];
+                                echo "<option value='$id_funcionarios' data-nombre='$nombre_funcionarios'>$nombre_funcionarios - $rut_funcionarios</option>";
+                            }
+                        } else {
+                            echo "<option value=''>No hay Kine disponibles</option>";
+                        }
+                        ?>
+                    </select>
+                    <input type="hidden" id="nombre_funcionario_entrante_1" name="nombre_funcionario_entrante_1">
+                </div>
 
-            <!-- OPCIONES SI ES DOMINGO -->
-            <div id="opciones_domingo" style="display: none;">
-                <hr>
-                <h6 class="text-center">Revisión stock Ventilación Mecánica (domingo)</h6>
-                <br>
-                <div class="row mb-3">
-                    <div class="col-md-4">
-                        <label for="filtros_hme">Filtros HME:</label>
-                        <input type="number" id="filtros_hme" name="filtros_hme" class="form-control form-control-sm">
+                <br><br>
+
+                <!-- OPCIONES SI ES DOMINGO -->
+                <div id="opciones_domingo" style="display: none;">
+                    <hr>
+                    <h6 class="text-center">Revisión stock Ventilación Mecánica (domingo)</h6>
+                    <br>
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <label for="filtros_hme">Filtros HME:</label>
+                            <input type="number" id="filtros_hme" name="filtros_hme" class="form-control form-control-sm">
+                        </div>
+                        <div class="col-md-4">
+                            <label for="filtros_antibacterianos">Filtros Antibacterianos:</label>
+                            <input type="number" id="filtros_antibacterianos" name="filtros_antibacterianos" class="form-control form-control-sm">
+                        </div>
+                        <div class="col-md-4">
+                            <label for="filtros_traqueostomia">Filtros de Traqueostomía:</label>
+                            <input type="number" id="filtros_traqueostomia" name="filtros_traqueostomia" class="form-control form-control-sm">
+                        </div>
                     </div>
-                    <div class="col-md-4">
-                        <label for="filtros_antibacterianos">Filtros Antibacterianos:</label>
-                        <input type="number" id="filtros_antibacterianos" name="filtros_antibacterianos" class="form-control form-control-sm">
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <label for="sonda_succion_cerrada">Sonda Succión Cerrada:</label>
+                            <input type="number" id="sonda_succion_cerrada" name="sonda_succion_cerrada" class="form-control form-control-sm">
+                        </div>
+                        <div class="col-md-4">
+                            <label for="corrugado_una_rama">Corrugado una rama:</label>
+                            <input type="number" id="corrugado_una_rama" name="corrugado_una_rama" class="form-control form-control-sm">
+                        </div>
+                        <div class="col-md-4">
+                            <label for="corrugado_dos_ramas">Corrugado dos ramas:</label>
+                            <input type="number" id="corrugado_dos_ramas" name="corrugado_dos_ramas" class="form-control form-control-sm">
+                        </div>
                     </div>
-                    <div class="col-md-4">
-                        <label for="filtros_traqueostomia">Filtros de Traqueostomía:</label>
-                        <input type="number" id="filtros_traqueostomia" name="filtros_traqueostomia" class="form-control form-control-sm">
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <label for="adaptador_idm">Adaptador IDM:</label>
+                            <input type="number" id="adaptador_idm" name="adaptador_idm" class="form-control form-control-sm">
+                        </div>
+                        <div class="col-md-4">
+                            <label for="adaptador_nbz">Adaptador NBZ:</label>
+                            <input type="number" id="adaptador_nbz" name="adaptador_nbz" class="form-control form-control-sm">
+                        </div>
+                        <div class="col-md-4">
+                            <label for="tubo_t">Tubo T:</label>
+                            <input type="number" id="tubo_t" name="tubo_t" class="form-control form-control-sm">
+                        </div>
+                    </div>
+                    <br>
+                    <h6 class="text-center">Mascarillas y fijaciones VMNI ordenadas por talla:</h6>
+                    <br>
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <label for="mascarillas_talla_s">S:</label>
+                            <input type="number" id="mascarillas_talla_s" name="mascarillas_talla_s" class="form-control form-control-sm">
+                        </div>
+                        <div class="col-md-4">
+                            <label for="mascarillas_talla_l">L:</label>
+                            <input type="number" id="mascarillas_talla_l" name="mascarillas_talla_l" class="form-control form-control-sm">
+                        </div>
+                        <div class="col-md-4">
+                            <label for="mascarillas_talla_xl">XL:</label>
+                            <input type="number" id="mascarillas_talla_xl" name="mascarillas_talla_xl" class="form-control form-control-sm">
+                        </div>
                     </div>
                 </div>
-                <div class="row mb-3">
-                    <div class="col-md-4">
-                        <label for="sonda_succion_cerrada">Sonda Succión Cerrada:</label>
-                        <input type="number" id="sonda_succion_cerrada" name="sonda_succion_cerrada" class="form-control form-control-sm">
-                    </div>
-                    <div class="col-md-4">
-                        <label for="corrugado_una_rama">Corrugado una rama:</label>
-                        <input type="number" id="corrugado_una_rama" name="corrugado_una_rama" class="form-control form-control-sm">
-                    </div>
-                    <div class="col-md-4">
-                        <label for="corrugado_dos_ramas">Corrugado dos ramas:</label>
-                        <input type="number" id="corrugado_dos_ramas" name="corrugado_dos_ramas" class="form-control form-control-sm">
-                    </div>
+                <!-- BOTÓN ENVIAR -->
+                <div class="d-grid gap-2 col-4 mx-auto">
+                    <button type="submit" class="btn btn-danger">Entregar Turno</button>
                 </div>
-                <div class="row mb-3">
-                    <div class="col-md-4">
-                        <label for="adaptador_idm">Adaptador IDM:</label>
-                        <input type="number" id="adaptador_idm" name="adaptador_idm" class="form-control form-control-sm">
-                    </div>
-                    <div class="col-md-4">
-                        <label for="adaptador_nbz">Adaptador NBZ:</label>
-                        <input type="number" id="adaptador_nbz" name="adaptador_nbz" class="form-control form-control-sm">
-                    </div>
-                    <div class="col-md-4">
-                        <label for="tubo_t">Tubo T:</label>
-                        <input type="number" id="tubo_t" name="tubo_t" class="form-control form-control-sm">
-                    </div>
-                </div>
-                <br>
-                <h6 class="text-center">Mascarillas y fijaciones VMNI ordenadas por talla:</h6>
-                <br>
-                <div class="row mb-3">
-                    <div class="col-md-4">
-                        <label for="mascarillas_talla_s">S:</label>
-                        <input type="number" id="mascarillas_talla_s" name="mascarillas_talla_s" class="form-control form-control-sm">
-                    </div>
-                    <div class="col-md-4">
-                        <label for="mascarillas_talla_l">L:</label>
-                        <input type="number" id="mascarillas_talla_l" name="mascarillas_talla_l" class="form-control form-control-sm">
-                    </div>
-                    <div class="col-md-4">
-                        <label for="mascarillas_talla_xl">XL:</label>
-                        <input type="number" id="mascarillas_talla_xl" name="mascarillas_talla_xl" class="form-control form-control-sm">
-                    </div>
-                </div>
-            </div>
-            <!-- BOTÓN ENVIAR -->
-            <div class="d-grid gap-2 col-4 mx-auto">
-                <button type="submit" onclick="return validarYEnviarkineuci();" class="btn btn-danger">Entregar Turno</button>
-            </div>
         </form>
     </div>
 
@@ -278,16 +285,49 @@ if (!$result) {
             }
         }
 
-        document.addEventListener('DOMContentLoaded', function () {
+        function setNombreFuncionario(funcionarioSelectId, funcionarioNombreId) {
+            var selectElement = document.getElementById(funcionarioSelectId);
+            var selectedOption = selectElement.options[selectElement.selectedIndex];
+
+            // Depuración: Verificar el valor que se está obteniendo
+            var nombreFuncionario = selectedOption.getAttribute("data-nombre");
+            console.log("Funcionario seleccionado: ", nombreFuncionario);
+
+            if (nombreFuncionario) {
+                document.getElementById(funcionarioNombreId).value = nombreFuncionario;
+            } else {
+                console.error("No se encontró el nombre del funcionario");
+            }
+        }
+
+
+        document.addEventListener('DOMContentLoaded', function() {
             mostrarOpcionesDomingo();
         });
-    </script>
 
+        function validarYEnviarkineuci() {
+            // Obtener los valores de los campos de contraseña y PIN de los funcionarios
+            const contrasenaSaliente1 = document.getElementById('contrasena_saliente_1').value.trim(); // trim() para quitar espacios
+            const funcionarioSaliente1 = document.getElementById('funcionario_saliente_1');
+            const pinSaliente1 = funcionarioSaliente1.options[funcionarioSaliente1.selectedIndex].getAttribute('data-pin').trim(); // trim() también para el PIN
+
+            // Depuración: Verifica los valores que estás comparando
+            console.log('Contraseña ingresada:', contrasenaSaliente1);
+            console.log('PIN de funcionario saliente:', pinSaliente1);
+
+            if (contrasenaSaliente1 !== pinSaliente1) {
+                alert('La contraseña del Funcionario saliente 1 es incorrecta.');
+                return false; // Detener el envío del formulario si las contraseñas no coinciden
+            }
+
+            return true; // Si las contraseñas coinciden, enviar el formulario
+        }
+    </script>
     <script src="/js/funcion_agregarfuncionario.js"></script>
     <script src="/js/funcion_obtenerpin.js"></script>
     <script src="/js/funcion_validaryEnviarkineuci.js"></script>
     <script src="/js/funcion_mostrarcampotexto.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-1CmRugG5aX5+I65R5BxDJjkGrtGk5r0PZ8iFv/V3+6Q/3D3De0hN/y4XXMn+Q3fj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>

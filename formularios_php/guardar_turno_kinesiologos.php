@@ -13,13 +13,14 @@ if ($mysqli->connect_error) {
     die("Error de conexión: " . $mysqli->connect_error);
 }
 
-// INSERTAR EN formulario_turnos_uti_tens
+// INSERTAR EN formulario_turnos_uti_kinesiologos
 $stmt = $mysqli->prepare("INSERT INTO formulario_turnos_uti_kinesiologos (
     fecha, tipoturno, camas_ocupadas, camas_disponibles, 
     cant_pacientes_fallecidos, detalles_pacientes_fallecidos, eventos_detalle, 
     acv_detalle, cantidad_setsuccion, Eventoskine_detalle, comentarios_detalle, 
-    funcionario_saliente_1, contrasena_saliente_1, funcionario_entrante_1
-) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? ,?)");
+    funcionario_saliente_1, contrasena_saliente_1, funcionario_entrante_1, 
+    nombre_funcionario_saliente_1, nombre_funcionario_entrante_1
+) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? ,?)");
 
 // VERIFICA
 if (!$stmt) {
@@ -41,14 +42,17 @@ $comentarios_detalle = $_POST['comentarios_detalle'];
 $funcionario_saliente_1 = $_POST['funcionario_saliente_1'];
 $contrasena_saliente_1 = $_POST['contrasena_saliente_1'];
 $funcionario_entrante_1 = $_POST['funcionario_entrante_1'];
+$nombre_funcionario_saliente_1 = $_POST['nombre_funcionario_saliente_1'];
+$nombre_funcionario_entrante_1 = $_POST['nombre_funcionario_entrante_1'];
 
 // ASIGNAR LOS VALORES A LA CONSULTA
 $stmt->bind_param(
-    "ssiiisssisssss", 
+    "ssiiisssisssssss", 
     $fecha, $tipoturno, $camas_ocupadas, $camas_disponibles, 
     $cant_pacientes_fallecidos, $detalles_pacientes_fallecidos, $eventos_detalle, 
     $acv_detalle, $cantidad_setsuccion, $eventoskine_detalle, $comentarios_detalle, 
-    $funcionario_saliente_1, $contrasena_saliente_1, $funcionario_entrante_1
+    $funcionario_saliente_1, $contrasena_saliente_1, $funcionario_entrante_1,
+    $nombre_funcionario_saliente_1, $nombre_funcionario_entrante_1
 );
 
 // EJECUTAR LA CONSULTA
@@ -70,4 +74,4 @@ if ($stmt->execute()) {
 // CERRAR CONSULTA Y CONEXIÓN
 $stmt->close();
 $mysqli->close();  
-?>
+?> 

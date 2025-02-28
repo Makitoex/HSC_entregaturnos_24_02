@@ -270,7 +270,7 @@ if (!$result) {
                     <!--INPUT SALIENTE 1 -->
                     <div class="col-md-3">
                         <label for="funcionario_saliente_1">Enfermero Saliente 1</label>
-                        <select id="funcionario_saliente_1" name="funcionario_saliente_1" class="form-select form-select-sm" required>
+                        <select id="funcionario_saliente_1" name="funcionario_saliente_1" class="form-select form-select-sm" required onchange="setNombreFuncionario('funcionario_saliente_1', 'nombre_funcionario_saliente_1')">
                             <option value="">-Seleccione Funcionario-</option>
                             <?php
                             if (mysqli_num_rows($result) > 0) {
@@ -280,94 +280,158 @@ if (!$result) {
                                     $rut_funcionarios = $row['rut_funcionarios'];
                                     $pin_funcionarios = $row['pin_funcionarios'];
 
-                                    echo "<option value='$id_funcionarios' data-pin='$pin_funcionarios'>$nombre_funcionarios - $rut_funcionarios</option>";
+                                    echo "<option value='$id_funcionarios' data-nombre='$nombre_funcionarios' data-pin='$pin_funcionarios'>$nombre_funcionarios - $rut_funcionarios</option>";
                                 }
                             } else {
                                 echo "<option value=''>No hay enfermeros disponibles</option>";
                             }
                             ?>
                         </select>
+                        <input type="hidden" id="nombre_funcionario_saliente_1" name="nombre_funcionario_saliente_1">
                         <br>
                         <!--INPUT SALIENTE 2 -->
                         <input type="password" id="contrasena_saliente_1" name="contrasena_saliente_1" placeholder="Ingrese Contraseña Enf.1" required>
                     </div>
+
                     <div class="col-md-3">
                         <label for="funcionario_saliente_2">Enfermero Saliente 2</label>
-                        <select id="funcionario_saliente_2" name="funcionario_saliente_2" class="form-select form-select-sm" required>
+                        <select id="funcionario_saliente_2" name="funcionario_saliente_2" class="form-select form-select-sm" required onchange="setNombreFuncionario('funcionario_saliente_2', 'nombre_funcionario_saliente_2')">
                             <option value="">-Seleccione Funcionario-</option>
                             <?php
-                            mysqli_data_seek($result, 0); //vuelve a leer los datos del resultado
+                            // Resetea el puntero de la consulta a la primera fila
+                            mysqli_data_seek($result, 0);  // Reinicia el puntero del resultado para el siguiente select
+
                             if (mysqli_num_rows($result) > 0) {
                                 while ($row = mysqli_fetch_assoc($result)) {
                                     $id_funcionarios = $row['id_funcionarios'];
                                     $nombre_funcionarios = $row['nombre_funcionarios'];
                                     $rut_funcionarios = $row['rut_funcionarios'];
-                                    $pin_funcionarios = $row['pin_funcionarios'];
+                                    $pin_funcionarios = $row['pin_funcionarios']; // ¡Asegúrate de incluir esto!
 
-                                    echo "<option value='$id_funcionarios' data-pin='$pin_funcionarios'>$nombre_funcionarios - $rut_funcionarios</option>";
+                                    echo "<option value='$id_funcionarios' data-nombre='$nombre_funcionarios' data-pin='$pin_funcionarios'>$nombre_funcionarios - $rut_funcionarios</option>";
                                 }
                             } else {
                                 echo "<option value=''>No hay enfermeros disponibles</option>";
                             }
                             ?>
                         </select>
+                        <input type="hidden" id="nombre_funcionario_saliente_2" name="nombre_funcionario_saliente_2">
                         <br>
                         <input type="password" id="contrasena_saliente_2" name="contrasena_saliente_2" placeholder="Ingrese Contraseña Enf.2" required>
                     </div>
+
                     <!--INPUT ENTRANTE 1 -->
                     <div class="col-md-3">
                         <label for="funcionario_entrante_1">Enfermero Entrante 1</label>
-                        <select id="funcionario_entrante_1" name="funcionario_entrante_1" class="form-select form-select-sm" required>
+                        <select id="funcionario_entrante_1" name="funcionario_entrante_1" class="form-select form-select-sm" required onchange="setNombreFuncionario('funcionario_entrante_1', 'nombre_funcionario_entrante_1')">
                             <option value="">-Seleccione Funcionario-</option>
                             <?php
-                            mysqli_data_seek($result, 0); //vuelve a leer los datos del resultado
+                            // Resetea el puntero de la consulta a la primera fila
+                            mysqli_data_seek($result, 0);  // Reinicia el puntero del resultado para el siguiente select
+
                             if (mysqli_num_rows($result) > 0) {
                                 while ($row = mysqli_fetch_assoc($result)) {
                                     $id_funcionarios = $row['id_funcionarios'];
                                     $nombre_funcionarios = $row['nombre_funcionarios'];
                                     $rut_funcionarios = $row['rut_funcionarios'];
-                                    echo "<option value='$id_funcionarios'>$nombre_funcionarios - $rut_funcionarios</option>";
+                                    echo "<option value='$id_funcionarios' data-nombre='$nombre_funcionarios'>$nombre_funcionarios - $rut_funcionarios</option>";
                                 }
                             } else {
                                 echo "<option value=''>No hay enfermeros disponibles</option>";
                             }
                             ?>
                         </select>
+                        <input type="hidden" id="nombre_funcionario_entrante_1" name="nombre_funcionario_entrante_1">
                         <br>
                     </div>
+
                     <!--INPUT ENFEMERO ENTRANTE 2 -->
                     <div class="col-md-3">
                         <label for="funcionario_entrante_2">Enfermero Entrante 2</label>
-                        <select id="funcionario_entrante_2" name="funcionario_entrante_2" class="form-select form-select-sm" required>
+                        <select id="funcionario_entrante_2" name="funcionario_entrante_2" class="form-select form-select-sm" required onchange="setNombreFuncionario('funcionario_entrante_2', 'nombre_funcionario_entrante_2')">
                             <option value="">-Seleccione Funcionario-</option>
                             <?php
-                            mysqli_data_seek($result, 0); //vuelve a leer los datos del resultado
+                            // Resetea el puntero de la consulta a la primera fila
+                            mysqli_data_seek($result, 0);  // Reinicia el puntero del resultado para el siguiente select
+
                             if (mysqli_num_rows($result) > 0) {
                                 while ($row = mysqli_fetch_assoc($result)) {
                                     $id_funcionarios = $row['id_funcionarios'];
                                     $nombre_funcionarios = $row['nombre_funcionarios'];
                                     $rut_funcionarios = $row['rut_funcionarios'];
-                                    echo "<option value='$id_funcionarios'>$nombre_funcionarios - $rut_funcionarios</option>";
+                                    echo "<option value='$id_funcionarios' data-nombre='$nombre_funcionarios'>$nombre_funcionarios - $rut_funcionarios</option>";
                                 }
                             } else {
                                 echo "<option value=''>No hay enfermeros disponibles</option>";
                             }
                             ?>
                         </select>
-                        <br>
-                        <br>
+                        <input type="hidden" id="nombre_funcionario_entrante_2" name="nombre_funcionario_entrante_2">
+                        <br><br>
                     </div>
                 </div>
                 <br><br>
-                <!--Boton eENVIAR FORMULARIO-->
+                <!--Boton ENVIAR FORMULARIO-->
                 <div class="d-grid gap-2 col-4 mx-auto">
                     <button type="submit" onclick="return validarYEnviar();" class="btn btn-danger">Entregar Turno</button>
                 </div>
+
             </form>
     </div>
+    <script>
+        function setNombreFuncionario(selectId, hiddenId) {
+            var selectElement = document.getElementById(selectId);
+            var selectedOption = selectElement.options[selectElement.selectedIndex];
+            var nombreFuncionario = selectedOption.getAttribute('data-nombre');
+            document.getElementById(hiddenId).value = nombreFuncionario;
+        }
+        function validarYEnviar(event) {
+        const funcionario1 = document.getElementById('funcionario_saliente_1');
+        const contraseña1 = document.getElementById('contrasena_saliente_1');
+        const funcionario2 = document.getElementById('funcionario_saliente_2');
+        const contraseña2 = document.getElementById('contrasena_saliente_2');
+
+        if (!funcionario1 || !funcionario2 || !contraseña1 || !contraseña2) {
+            alert('Error: No se encontraron los campos de funcionarios o PIN.');
+            event.preventDefault();
+            return false;
+        }
+
+        // Verificar que se haya seleccionado un funcionario
+        if (funcionario1.value === "" || funcionario2.value === "") {
+            alert('Por favor, selecciona ambos funcionarios.');
+            event.preventDefault();
+            return false;
+        }
+
+        // Obtener los PINs
+        const pinCorrecto1 = funcionario1.options[funcionario1.selectedIndex].getAttribute('data-pin');
+        const pinCorrecto2 = funcionario2.options[funcionario2.selectedIndex].getAttribute('data-pin');
+
+        if (!pinCorrecto1 || !pinCorrecto2) {
+            alert('Error: No se encontraron los PINs de los funcionarios.');
+            event.preventDefault();
+            return false;
+        }
+
+        if (contraseña1.value.trim() !== pinCorrecto1.trim()) {
+            alert('El PIN del Funcionario 1 es incorrecto.');
+            event.preventDefault();
+            return false;
+        }
+
+        if (contraseña2.value.trim() !== pinCorrecto2.trim()) {
+            alert('El PIN del Funcionario 2 es incorrecto.');
+            event.preventDefault();
+            return false;
+        }
+
+        return true;
+    }
+
+    </script>
     <script src="/js/funcion_agregarfuncionario.js"></script>
     <script src="/js/funcion_obtenerpin.js"></script>
-    <script src="/js/funcion_validaryEnviar.js"></script>
     <script src="/js/funcion_mostrarcampotexto.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-1CmRugG5aX5+I65R5BxDJjkGrtGk5r0PZ8iFv/V3+6Q/3D3De0hN/y4XXMn+Q3fj" crossorigin="anonymous"></script>
 </body>

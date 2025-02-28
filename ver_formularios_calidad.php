@@ -3,13 +3,11 @@ session_start();
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-
 if (!isset($_SESSION['id_usuarios'])) {
     header("Location: index.php");
     exit();
 }
 include 'conexion.php';
-
 
 // Obtener los nombres de las tablas
 $tablas = [
@@ -23,7 +21,8 @@ $tablas = [
 ];
 
 // Función para obtener las columnas de una tabla
-function obtenerColumnas($conexion, $tabla) {
+function obtenerColumnas($conexion, $tabla)
+{
     $query = "DESCRIBE $tabla";
     $resultado = mysqli_query($conexion, $query);
     $columnas = [];
@@ -34,14 +33,15 @@ function obtenerColumnas($conexion, $tabla) {
 }
 
 // Función para obtener las filas de una tabla con filtros
-function obtenerFilas($conexion, $tabla, $search = '', $startDate = '', $endDate = '') {
+function obtenerFilas($conexion, $tabla, $search = '', $startDate = '', $endDate = '')
+{
     $query = "SELECT * FROM $tabla";
     $conditions = [];
 
     if ($search) {
         $conditions[] = "CONCAT_WS(' ', " . implode(", ", obtenerColumnas($conexion, $tabla)) . ") LIKE '%$search%'";
     }
-    
+
     if ($startDate && $endDate) {
         $conditions[] = "fecha BETWEEN '$startDate' AND '$endDate'";
     }
@@ -57,6 +57,7 @@ function obtenerFilas($conexion, $tabla, $search = '', $startDate = '', $endDate
     }
     return $filas;
 }
+
 include 'navbar_calidad.php';
 ?>
 
@@ -69,167 +70,164 @@ include 'navbar_calidad.php';
     <title>Visualización de Formularios</title>
     <link rel="stylesheet" href="styles.css">
     <style>
+        /* Estilos generales */
         body {
             font-family: 'Roboto', sans-serif;
-            background-color: #f0f2f5;
-            color: #333;
             margin: 0;
             padding: 0;
+            background-color: #f0f4f8;
         }
 
         .container {
-            width: 90%;
-            max-width: 1200px;
-            margin: 40px auto;
-            padding: 20px;
-            background-color: #fff;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 85%;
+            margin: 0 auto;
+            padding: 30px;
+            background-color: #ffffff;
             border-radius: 12px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
         }
 
-        h1 {
-            font-size: 28px;
-            margin-bottom: 30px;
-            color:rgb(0, 0, 0);
+        h1,
+        h2 {
             text-align: center;
+            color: #333;
         }
 
+        hr {
+            border: 1px solid #e0e0e0;
+        }
+
+        /* Estilos del selector y formulario */
         .selector-container {
-            margin-bottom: 20px;
             display: flex;
             justify-content: space-between;
-            gap: 10px;
-        }
-
-        .selector-container select,
-        .selector-container button,
-        .selector-container form button {
-            padding: 12px 16px;
-            font-size: 16px;
-            border-radius: 8px;
-            border: 1px solidrgb(0, 0, 0);
-            background-color:rgb(179, 2, 2);
-            color: white;
-            cursor: pointer;
-            width: 30%;
-            transition: background-color 0.3s, border-color 0.3s;
-            text-align: center;
-        }
-
-        .selector-container button:hover,
-        .selector-container form button:hover {
-            background-color: #0056b3;
-            border-color: #0056b3;
-        }
-
-        .search-container {
+            align-items: center;
             margin-bottom: 20px;
-            display: flex;
-            justify-content: space-between;
-            gap: 10px;
         }
 
-        .search-container input {
-            padding: 12px;
+        select,
+        input[type="text"],
+        input[type="date"],
+        button {
+            padding: 12px 18px;
             font-size: 16px;
-            border-radius: 8px;
+            margin-right: 10px;
             border: 1px solid #ccc;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            width: 30%;
-        }
-
-        .search-container input[type="date"] {
-            width: 20%;
-        }
-
-        .search-container button {
-            padding: 12px;
-            font-size: 16px;
             border-radius: 8px;
-            border: 1px solidrgb(25, 112, 18);
-            background-color: #007BFF;
+            transition: all 0.3s ease;
+        }
+
+        select,
+        input[type="text"],
+        input[type="date"] {
+            width: 250px;
+        }
+
+        button {
+            background-color: #007bff;
             color: white;
+            border: none;
             cursor: pointer;
-            width: 15%;
-            transition: background-color 0.3s, border-color 0.3s;
+            font-weight: bold;
         }
 
-        .search-container button:hover {
+        button:hover {
             background-color: #0056b3;
-            border-color: #0056b3;
         }
 
+        /* Estilos de la tabla */
         .table-container {
-            margin-top: 20px;
             overflow-x: auto;
+            margin-top: 30px;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-top: 10px;
         }
 
-        table th,
-        table td {
+        th,
+        td {
             padding: 12px;
             text-align: left;
-            border-bottom: 1px solid #ddd;
+            border: 1px solid #e0e0e0;
         }
 
-        table th {
-            background-color: #f4f4f9;
-            color: #333;
+        th {
+            background-color: #007bff;
+            color: white;
         }
 
-        table tr:nth-child(even) {
+        tr:nth-child(even) {
             background-color: #f9f9f9;
         }
 
-        table tr:hover {
-            background-color: #f1f1f1;
-        }
-
+        /* Paginación */
         .pagination {
-            margin-top: 20px;
             display: flex;
             justify-content: center;
-            gap: 5px;
+            margin-top: 20px;
+            gap: 10px;
         }
 
         .pagination button {
             padding: 10px 15px;
-            border: none;
-            border-radius: 8px;
-            background-color: #007BFF;
-            color: white;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f4f4f4;
             cursor: pointer;
-            transition: background-color 0.3s;
-        }
-
-        .pagination button:hover {
-            background-color: #0056b3;
+            color: #007bff; /* Cambia el color del texto de los botones */
+            transition: all 0.3s ease;
         }
 
         .pagination button.active {
+            background-color:rgb(0, 255, 221);
+            color: white;
+        }
+
+        .pagination button:hover {
+            background-color: #ddd;
+        }
+
+        .pagination button.active:hover {
             background-color: #0056b3;
+        }
+
+        /* Barra de búsqueda */
+        .search-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        .search-container input[type="text"],
+        .search-container input[type="date"] {
+            width: 200px;
+        }
+
+        .search-container button {
+            background-color:rgb(201, 11, 11);
+            border: none;
+            padding: 10px 20px;
+            color: white;
+            cursor: pointer;
+        }
+
+        .search-container button:hover {
+            background-color:rgb(7, 69, 163);
         }
     </style>
 </head>
 
 <body>
-
     <div class="container">
         <h1>Formularios Registrados</h1>
-        <br>
         <hr>
-        <br>
-        <h2 id="selectedTableTitle" style="text-align: center; color: #555;"></h2>
-        <br>
-        <!-- Selector de tablas -->
+        <h2 id="selectedTableTitle" style="color: #555;"></h2>
         <div class="selector-container">
-            <br>
-            <br>
             <select id="tableSelector">
                 <option value="">--Seleccione--</option>
                 <?php foreach ($tablas as $tabla) { ?>
@@ -257,8 +255,7 @@ include 'navbar_calidad.php';
                 <thead>
                     <tr id="tableHeader"></tr>
                 </thead>
-                <tbody id="tableBody">
-                </tbody>
+                <tbody id="tableBody"></tbody>
             </table>
         </div>
 
@@ -271,60 +268,69 @@ include 'navbar_calidad.php';
         const rowsPerPage = 10;
 
         function loadTable() {
-    const tableSelector = document.getElementById('tableSelector').value;
-    const searchText = document.getElementById('searchText').value;
-    const startDate = document.getElementById('startDate').value;
-    const endDate = document.getElementById('endDate').value;
-    const tableHeader = document.getElementById('tableHeader');
-    const tableBody = document.getElementById('tableBody');
-    const pagination = document.getElementById('pagination');
-    const selectedTableTitle = document.getElementById('selectedTableTitle');
-    
-    document.getElementById('selectedTable').value = tableSelector;
+            const tableSelector = document.getElementById('tableSelector').value;
+            const searchText = document.getElementById('searchText').value;
+            const startDate = document.getElementById('startDate').value;
+            const endDate = document.getElementById('endDate').value;
+            const tableHeader = document.getElementById('tableHeader');
+            const tableBody = document.getElementById('tableBody');
+            const pagination = document.getElementById('pagination');
+            const selectedTableTitle = document.getElementById('selectedTableTitle');
 
-    // Mostrar el nombre de la tabla seleccionada en el subtítulo
-    if (tableSelector) {
-        selectedTableTitle.textContent = "Visualizando: " + tableSelector.replace(/_/g, ' ').toUpperCase();
-    } else {
-        selectedTableTitle.textContent = "";
-    }
+            document.getElementById('selectedTable').value = tableSelector;
 
-    if (tableSelector === "") return;
-
-    fetch('cargar_tabla.php?table=' + tableSelector + '&search=' + searchText + '&startDate=' + startDate + '&endDate=' + endDate)
-        .then(response => response.json())
-        .then(data => {
-            tableHeader.innerHTML = '';
-            tableBody.innerHTML = '';
-            currentPage = 1;
-
-            if (data.columns.length > 0) {
-                data.columns.forEach(column => {
-                    const th = document.createElement('th');
-                    th.textContent = column;
-                    tableHeader.appendChild(th);
-                });
+            if (tableSelector) {
+                selectedTableTitle.textContent = "Visualizando: " + tableSelector.replace(/_/g, ' ').toUpperCase();
+            } else {
+                selectedTableTitle.textContent = "";
             }
 
-            if (data.rows.length > 0) {
-                data.rows.forEach(row => {
-                    const tr = document.createElement('tr');
-                    row.forEach(cell => {
-                        const td = document.createElement('td');
-                        td.textContent = cell;
-                        tr.appendChild(td);
-                    });
-                    tableBody.appendChild(tr);
+            if (tableSelector === "") return;
+
+            fetch('cargar_tabla.php?table=' + tableSelector + '&search=' + searchText + '&startDate=' + startDate + '&endDate=' + endDate)
+                .then(response => response.json())
+                .then(data => {
+                    tableHeader.innerHTML = '';
+                    tableBody.innerHTML = '';
+                    currentPage = 1;
+
+                    if (data.columns.length > 0) {
+                        data.columns.forEach(column => {
+                            const th = document.createElement('th');
+                            th.textContent = column;
+                            tableHeader.appendChild(th);
+                        });
+                    }
+
+                    if (data.rows.length > 0) {
+                        data.rows.forEach((row, index) => {
+                            const tr = document.createElement('tr');
+                            row.forEach(cell => {
+                                const td = document.createElement('td');
+                                td.textContent = cell;
+                                tr.appendChild(td);
+                            });
+
+                            // Crear el botón "Generar PDF"
+                            const td = document.createElement('td');
+                            const generatePdfButton = document.createElement('button');
+                            generatePdfButton.textContent = "Generar PDF";
+                            generatePdfButton.onclick = function() {
+                                generarPdf(row, data.columns, tableSelector);
+                            };
+                            td.appendChild(generatePdfButton);
+                            tr.appendChild(td);
+
+                            tableBody.appendChild(tr);
+                        });
+
+                        updatePagination();
+                    }
+                })
+                .catch(error => {
+                    console.error('Error al cargar la tabla:', error);
                 });
-
-                updatePagination();
-            }
-        })
-        .catch(error => {
-            console.error('Error al cargar la tabla:', error);
-        });
-}
-
+        }
 
         function updatePagination() {
             const tableBody = document.getElementById('tableBody');
@@ -337,12 +343,18 @@ include 'navbar_calidad.php';
             for (let i = 1; i <= totalPages; i++) {
                 const button = document.createElement('button');
                 button.textContent = i;
+
+                // Asegurarse de que todos los botones tengan texto visible
+                button.style.color = '#007bff'; 
+
                 if (i === currentPage) {
                     button.classList.add('active');
                 }
+
                 button.addEventListener('click', () => {
                     currentPage = i;
                     displayRows();
+                    updatePagination();
                 });
                 pagination.appendChild(button);
             }
@@ -363,6 +375,34 @@ include 'navbar_calidad.php';
                     rows[i].style.display = 'none';
                 }
             }
+        }
+
+        function generarPdf(rowData, columns, tableName) {
+            fetch('generar_pdf.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        table: tableName,
+                        columns: columns,
+                        data: rowData
+                    })
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Error en la respuesta del servidor');
+                    }
+                    return response.blob();
+                })
+                .then(blob => {
+                    const url = window.URL.createObjectURL(blob);
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.download = 'registro.pdf';
+                    link.click();
+                })
+                .catch(error => console.error('Error al generar el PDF:', error));
         }
     </script>
 </body>

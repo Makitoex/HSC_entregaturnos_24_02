@@ -1,19 +1,15 @@
 <?php
-// CONEXION A BD (EL INCLUDE CONEXION.PHP NO TOMABA)
 $servername = "localhost";  
 $username = "root";         
 $password = "";            
 $dbname = "sistema_entrega_turnos_hsc"; 
 
-// CREAR CONEXION
 $mysqli = new mysqli($servername, $username, $password, $dbname);
 
-// Verificar conexión
 if ($mysqli->connect_error) {
     die("Error de conexión: " . $mysqli->connect_error);
 }
 
-// CONSULTA DE LAS 37 COLUMNAS ASIGNADAS AL FORM
 $stmt = $mysqli->prepare("INSERT INTO formulario_turnos_uci_enfermeros (
     fecha, tipoturno, medico_turno, tens_turno, auxiliar_turno, kinesiologo_turno, 
     controlmedico, carrodeparos, camas_ocupadas, camas_disponibles, camas_reservadas, cantpacientesfallecidos, 
@@ -22,15 +18,14 @@ $stmt = $mysqli->prepare("INSERT INTO formulario_turnos_uci_enfermeros (
     medicamento_fentanilo0_1, medicamento_fentanilo_0_5mg, medicamento_lorazepam_4mg, medicamento_morfina, 
     medicamento_profolol, medicamento_quetiapina, medicamento_suxometonio, traslados_detalle, eventos_detalle, 
     comentarios_detalle, funcionario_saliente_1, contrasena_saliente_1, funcionario_saliente_2, contrasena_saliente_2, 
-    funcionario_entrante_1, funcionario_entrante_2
-) VALUES (? ,?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+    funcionario_entrante_1, funcionario_entrante_2, nombre_funcionario_saliente_1, nombre_funcionario_saliente_2, 
+    nombre_funcionario_entrante_1, nombre_funcionario_entrante_2
+) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
-// VERIFICA QUE LA CONSULTA ESTE CORRECTAMENTE INICIADA
 if (!$stmt) {
     die("Error en la preparación: " . $mysqli->error);
 }
 
-// VARIABLES A INSERTAR
 $fecha = $_POST['fecha'] ?? NULL;
 $tipoturno = $_POST['tipoturno'] ?? NULL;
 $medico_turno = $_POST['medico_turno'] ?? NULL;
@@ -68,37 +63,32 @@ $funcionario_saliente_2 = $_POST['funcionario_saliente_2'] ?? NULL;
 $contrasena_saliente_2 = $_POST['contrasena_saliente_2'] ?? NULL;
 $funcionario_entrante_1 = $_POST['funcionario_entrante_1'] ?? NULL;
 $funcionario_entrante_2 = $_POST['funcionario_entrante_2'] ?? NULL;
+$nombre_funcionario_saliente_1 = $_POST['nombre_funcionario_saliente_1'] ?? NULL;
+$nombre_funcionario_saliente_2 = $_POST['nombre_funcionario_saliente_2'] ?? NULL;
+$nombre_funcionario_entrante_1 = $_POST['nombre_funcionario_entrante_1'] ?? NULL;
+$nombre_funcionario_entrante_2 = $_POST['nombre_funcionario_entrante_2'] ?? NULL;
 
-// VALORES ASIGNADOS A LA CONSULTA
 $stmt->bind_param(
-    "sssssssssssssssiiiiiiiiiiiiiissssssss",
+    "sssssssssssssiiiiiiiiiiiiiiisssssssssssss",
     $fecha, $tipoturno, $medico_turno, $tens_turno, $auxiliar_turno, $kinesiologo_turno, 
     $controlmedico, $carrodeparos, $camas_ocupadas, $camas_disponibles, $camas_reservadas, $cantpacientesfallecidos, 
     $detallespacientesf, $medicamento_ketamina, $medicamento_haldol, $medicamento_diazepam100ev, $medicamento_diazepam100vo, 
     $medicamento_rocuronio, $medicamento_clonazepam, $medicamento_midazolam5mg, $medicamento_midazolam50mg, 
     $medicamento_fentanilo0_1, $medicamento_fentanilo_0_5mg, $medicamento_lorazepam_4mg, $medicamento_morfina, 
     $medicamento_profolol, $medicamento_quetiapina, $medicamento_suxometonio, $traslados_detalle, $eventos_detalle, 
-    $comentarios_detalle, $funcionario_saliente_1, $contrasena_saliente_1, $funcionario_saliente_2, $contrasena_saliente_2, 
-    $funcionario_entrante_1, $funcionario_entrante_2
+    $comentarios_detalle, $funcionario_saliente_1, $contrasena_saliente_1, $funcionario_saliente_2, $contrasena_saliente_2,
+    $funcionario_entrante_1, $funcionario_entrante_2, $nombre_funcionario_saliente_1, $nombre_funcionario_saliente_2, 
+    $nombre_funcionario_entrante_1, $nombre_funcionario_entrante_2
 );
 
-// EJECUTA LA CONSULTA 1 VEZ
 if ($stmt->execute()) {
-    // OBTIENE EL ID DEL FORMULARIO INSERTADO
     $id_formulario = $mysqli->insert_id;
-
-    if ($id_formulario > 0) {
-        // REDIRIGE AL PHP QUE GENERA EL PDF 
-        header("Location: generar_pdf_uci_enfermeros.php?id=" . $id_formulario);
-        exit();
-    } else {
-        die("Error: No se pudo obtener el ID del formulario.");
-    }
+    header("Location: generar_pdf_uci_enfermeros.php?id=" . $id_formulario);
+    exit();
 } else {
     echo "Error al insertar: " . $stmt->error;
 }
 
-// CIERRA CONSULTA Y CONEXION
 $stmt->close();
 $mysqli->close();
 ?>

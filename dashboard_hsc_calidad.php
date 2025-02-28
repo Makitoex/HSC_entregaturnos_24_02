@@ -94,7 +94,7 @@ $stmt->close();
 }
 
         .main-content {
-            margin-left: 260px;
+            margin-left: 50px;
             padding: 20px;
         }
         .header-container {
@@ -144,7 +144,6 @@ $stmt->close();
         <br>
 
         <a href="ver_formularios_calidad.php">Ver Formularios</a>
-        <a href="auditoria_datos.php">Auditoría de Datos</a>
         <a href="reportes.php">Generar Reportes</a>
         <a href="cerrarsesion.php">Cerrar sesión</a>
         <br>
@@ -165,10 +164,6 @@ $stmt->close();
             <div class="option" onclick="location.href='ver_formularios_calidad.php'">
                 <h3>Ver Formularios</h3>
                 <p>Accede a todos los formularios ingresados por los usuarios.</p>
-            </div>
-            <div class="option" onclick="location.href='auditoria_datos.php'">
-                <h3>Auditoría de Datos</h3>
-                <p>Revisa y valida los datos ingresados en los formularios.</p>
             </div>
             <div class="option" onclick="location.href='reportes.php'">
                 <h3>Generar Reportes</h3>

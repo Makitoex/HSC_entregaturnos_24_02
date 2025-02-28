@@ -20,8 +20,9 @@ $stmt = $mysqli->prepare("INSERT INTO formulario_turnos_uti_tens (
     detalles_pacientes_fallecidos, eventos_detalle, comentarios_detalle, 
     funcionario_saliente_1, funcionario_saliente_2, funcionario_saliente_3, 
     contrasena_saliente_1, contrasena_saliente_2, contrasena_saliente_3, 
-    funcionario_entrante_1, funcionario_entrante_2, funcionario_entrante_3
-) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+    funcionario_entrante_1, funcionario_entrante_2, funcionario_entrante_3 , nombre_funcionario_entrante_1 ,nombre_funcionario_entrante_2 , nombre_funcionario_entrante_3,
+    nombre_funcionario_saliente_1,nombre_funcionario_saliente_2,nombre_funcionario_saliente_3
+) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? , ?,?,?,?,?,?)");
 
 // VERIFICAR QUE LA CONSULTA SE PREPARÓ CORRECTAMENTE
 if (!$stmt) {
@@ -49,16 +50,22 @@ $contrasena_saliente_3 = $_POST['contrasena_saliente_3'];
 $funcionario_entrante_1 = $_POST['funcionario_entrante_1'];
 $funcionario_entrante_2 = $_POST['funcionario_entrante_2'];
 $funcionario_entrante_3 = $_POST['funcionario_entrante_3'];
-
+$nombre_funcionario_saliente_1 = $_POST['nombre_funcionario_saliente_1'];
+$nombre_funcionario_saliente_2 = $_POST['nombre_funcionario_saliente_2'];
+$nombre_funcionario_saliente_3 = $_POST['nombre_funcionario_saliente_3'];
+$nombre_funcionario_entrante_1 = $_POST['nombre_funcionario_entrante_1'];
+$nombre_funcionario_entrante_2 = $_POST['nombre_funcionario_entrante_2'];
+$nombre_funcionario_entrante_3 = $_POST['nombre_funcionario_entrante_3'];
 // ASIGNAR LOS VALORES A LA CONSULTA
 $stmt->bind_param(
-    "ssssiiisssssssssssss",
+    "ssssiiisssssssssssssssssss",
     $fecha, $tipoturno, $medico_turno, $control_medico_residente, 
     $camas_ocupadas, $camas_disponibles, $camas_reservadas, $cant_pacientes_fallecidos, 
     $detalles_pacientes_fallecidos, $eventos_detalle, $comentarios_detalle, 
     $funcionario_saliente_1, $funcionario_saliente_2, $funcionario_saliente_3, 
     $contrasena_saliente_1, $contrasena_saliente_2, $contrasena_saliente_3, 
-    $funcionario_entrante_1, $funcionario_entrante_2, $funcionario_entrante_3
+    $funcionario_entrante_1, $funcionario_entrante_2, $funcionario_entrante_3 , $nombre_funcionario_saliente_1 , $nombre_funcionario_saliente_2 , $nombre_funcionario_saliente_3 ,
+    $nombre_funcionario_entrante_1 ,$nombre_funcionario_entrante_2,$nombre_funcionario_entrante_3
 );
 
 // EJECUTAR LA CONSULTA

@@ -144,9 +144,10 @@ if (!$result) {
             <h6 class="text-center">TENS turnantes:</h6>
             <br>
             <div class="row">
-                <div class="col-md-4">
+                <!-- TENS Saliente 1 -->
+                <div class="col-md-4 mb-3">
                     <label for="funcionario_saliente_1">TENS Saliente 1</label>
-                    <select id="funcionario_saliente_1" name="funcionario_saliente_1" class="form-select form-select-sm" required>
+                    <select id="funcionario_saliente_1" name="funcionario_saliente_1" class="form-select form-select-sm" required onchange="setNombreYPinFuncionario('funcionario_saliente_1', 'nombre_funcionario_saliente_1', 'pin_funcionario_saliente_1')">
                         <option value="">-Seleccione Funcionario-</option>
                         <?php
                         mysqli_data_seek($result, 0); //vuelve a leer los datos del resultado
@@ -155,44 +156,48 @@ if (!$result) {
                                 $id_funcionarios = $row['id_funcionarios'];
                                 $nombre_funcionarios = $row['nombre_funcionarios'];
                                 $rut_funcionarios = $row['rut_funcionarios'];
-                                $pin_funcionarios = $row['pin_funcionarios']; // Asegúrate de tener este campo en tu consulta SQL
-                                echo "<option value='$id_funcionarios' data-pin='$pin_funcionarios'>$nombre_funcionarios - $rut_funcionarios</option>";
+                                $pin_funcionarios = $row['pin_funcionarios'];
+                                echo "<option value='$id_funcionarios' data-nombre='$nombre_funcionarios' data-pin='$pin_funcionarios'>$nombre_funcionarios - $rut_funcionarios</option>";
                             }
                         } else {
                             echo "<option value=''>No hay disponibles</option>";
                         }
                         ?>
-
                     </select>
-                    <input type="password" id="contrasena_saliente_1" name="contrasena_saliente_1" placeholder="Ingrese Contraseña Tens.1" required>
+                    <input type="hidden" id="nombre_funcionario_saliente_1" name="nombre_funcionario_saliente_1">
+                    <input type="hidden" id="pin_funcionario_saliente_1" name="pin_funcionario_saliente_1">
+                    <input type="password" id="contrasena_saliente_1" name="contrasena_saliente_1" placeholder="Ingrese Contraseña Tens.1" required class="form-control form-control-sm mt-2">
                 </div>
 
-                <div class="col-md-4">
+                <!-- TENS Saliente 2 -->
+                <div class="col-md-4 mb-3">
                     <label for="funcionario_saliente_2">TENS Saliente 2</label>
-                    <select id="funcionario_saliente_2" name="funcionario_saliente_2" class="form-select form-select-sm" required>
+                    <select id="funcionario_saliente_2" name="funcionario_saliente_2" class="form-select form-select-sm" required onchange="setNombreYPinFuncionario('funcionario_saliente_2', 'nombre_funcionario_saliente_2', 'pin_funcionario_saliente_2')">
                         <option value="">-Seleccione Funcionario-</option>
-                        <?php 
+                        <?php
                         mysqli_data_seek($result, 0); //vuelve a leer los datos del resultado
                         if (mysqli_num_rows($result) > 0) {
                             while ($row = mysqli_fetch_assoc($result)) {
                                 $id_funcionarios = $row['id_funcionarios'];
                                 $nombre_funcionarios = $row['nombre_funcionarios'];
                                 $rut_funcionarios = $row['rut_funcionarios'];
-                                $pin_funcionarios = $row['pin_funcionarios']; 
-                                echo "<option value='$id_funcionarios' data-pin='$pin_funcionarios'>$nombre_funcionarios - $rut_funcionarios</option>";
+                                $pin_funcionarios = $row['pin_funcionarios'];
+                                echo "<option value='$id_funcionarios' data-nombre='$nombre_funcionarios' data-pin='$pin_funcionarios'>$nombre_funcionarios - $rut_funcionarios</option>";
                             }
                         } else {
                             echo "<option value=''>No hay disponibles</option>";
                         }
                         ?>
-
                     </select>
-                    <input type="password" id="contrasena_saliente_2" name="contrasena_saliente_2" placeholder="Ingrese Contraseña Tens.2" required>
+                    <input type="hidden" id="nombre_funcionario_saliente_2" name="nombre_funcionario_saliente_2">
+                    <input type="hidden" id="pin_funcionario_saliente_2" name="pin_funcionario_saliente_2">
+                    <input type="password" id="contrasena_saliente_2" name="contrasena_saliente_2" placeholder="Ingrese Contraseña Tens.2" required class="form-control form-control-sm mt-2">
                 </div>
 
-                <div class="col-md-4">
+                <!-- TENS Saliente 3 -->
+                <div class="col-md-4 mb-3">
                     <label for="funcionario_saliente_3">TENS Saliente 3</label>
-                    <select id="funcionario_saliente_3" name="funcionario_saliente_3" class="form-select form-select-sm" required>
+                    <select id="funcionario_saliente_3" name="funcionario_saliente_3" class="form-select form-select-sm" required onchange="setNombreYPinFuncionario('funcionario_saliente_3', 'nombre_funcionario_saliente_3', 'pin_funcionario_saliente_3')">
                         <option value="">-Seleccione Funcionario-</option>
                         <?php
                         mysqli_data_seek($result, 0); //vuelve a leer los datos del resultado
@@ -201,22 +206,27 @@ if (!$result) {
                                 $id_funcionarios = $row['id_funcionarios'];
                                 $nombre_funcionarios = $row['nombre_funcionarios'];
                                 $rut_funcionarios = $row['rut_funcionarios'];
-                                $pin_funcionarios = $row['pin_funcionarios']; 
-                                echo "<option value='$id_funcionarios' data-pin='$pin_funcionarios'>$nombre_funcionarios - $rut_funcionarios</option>";
+                                $pin_funcionarios = $row['pin_funcionarios'];
+                                echo "<option value='$id_funcionarios' data-nombre='$nombre_funcionarios' data-pin='$pin_funcionarios'>$nombre_funcionarios - $rut_funcionarios</option>";
                             }
                         } else {
                             echo "<option value=''>No hay disponibles</option>";
                         }
                         ?>
                     </select>
-                    <input type="password" id="contrasena_saliente_3" name="contrasena_saliente_3" placeholder="Ingrese Contraseña Tens.3" required>
+                    <input type="hidden" id="nombre_funcionario_saliente_3" name="nombre_funcionario_saliente_3">
+                    <input type="hidden" id="pin_funcionario_saliente_3" name="pin_funcionario_saliente_3">
+                    <input type="password" id="contrasena_saliente_3" name="contrasena_saliente_3" placeholder="Ingrese Contraseña Tens.3" required class="form-control form-control-sm mt-2">
                 </div>
             </div>
+
             <br><br>
+
             <div class="row">
-                <div class="col-md-4">
+                <!-- TENS Entrante 1 -->
+                <div class="col-md-4 mb-3">
                     <label for="funcionario_entrante_1">TENS Entrante 1</label>
-                    <select id="funcionario_entrante_1" name="funcionario_entrante_1" class="form-select form-select-sm" required>
+                    <select id="funcionario_entrante_1" name="funcionario_entrante_1" class="form-select form-select-sm" required onchange="setNombreYPinFuncionario('funcionario_entrante_1', 'nombre_funcionario_entrante_1', 'pin_funcionario_entrante_1')">
                         <option value="">-Seleccione Funcionario-</option>
                         <?php
                         mysqli_data_seek($result, 0); //vuelve a leer los datos del resultado
@@ -225,20 +235,22 @@ if (!$result) {
                                 $id_funcionarios = $row['id_funcionarios'];
                                 $nombre_funcionarios = $row['nombre_funcionarios'];
                                 $rut_funcionarios = $row['rut_funcionarios'];
-                                $pin_funcionarios = $row['pin_funcionarios']; 
-                                echo "<option value='$id_funcionarios' data-pin='$pin_funcionarios'>$nombre_funcionarios - $rut_funcionarios</option>";
+                                $pin_funcionarios = $row['pin_funcionarios'];
+                                echo "<option value='$id_funcionarios' data-nombre='$nombre_funcionarios' data-pin='$pin_funcionarios'>$nombre_funcionarios - $rut_funcionarios</option>";
                             }
                         } else {
                             echo "<option value=''>No hay disponibles</option>";
                         }
                         ?>
-
                     </select>
+                    <input type="hidden" id="nombre_funcionario_entrante_1" name="nombre_funcionario_entrante_1">
+                    <input type="hidden" id="pin_funcionario_entrante_1" name="pin_funcionario_entrante_1">
                 </div>
 
-                <div class="col-md-4">
+                <!-- TENS Entrante 2 -->
+                <div class="col-md-4 mb-3">
                     <label for="funcionario_entrante_2">TENS Entrante 2</label>
-                    <select id="funcionario_entrante_2" name="funcionario_entrante_2" class="form-select form-select-sm" required>
+                    <select id="funcionario_entrante_2" name="funcionario_entrante_2" class="form-select form-select-sm" required onchange="setNombreYPinFuncionario('funcionario_entrante_2', 'nombre_funcionario_entrante_2', 'pin_funcionario_entrante_2')">
                         <option value="">-Seleccione Funcionario-</option>
                         <?php
                         mysqli_data_seek($result, 0); //vuelve a leer los datos del resultado
@@ -248,18 +260,21 @@ if (!$result) {
                                 $nombre_funcionarios = $row['nombre_funcionarios'];
                                 $rut_funcionarios = $row['rut_funcionarios'];
                                 $pin_funcionarios = $row['pin_funcionarios'];
-                                echo "<option value='$id_funcionarios' data-pin='$pin_funcionarios'>$nombre_funcionarios - $rut_funcionarios</option>";
+                                echo "<option value='$id_funcionarios' data-nombre='$nombre_funcionarios' data-pin='$pin_funcionarios'>$nombre_funcionarios - $rut_funcionarios</option>";
                             }
                         } else {
                             echo "<option value=''>No hay disponibles</option>";
                         }
                         ?>
                     </select>
+                    <input type="hidden" id="nombre_funcionario_entrante_2" name="nombre_funcionario_entrante_2">
+                    <input type="hidden" id="pin_funcionario_entrante_2" name="pin_funcionario_entrante_2">
                 </div>
 
-                <div class="col-md-4">
+                <!-- TENS Entrante 3 -->
+                <div class="col-md-4 mb-3">
                     <label for="funcionario_entrante_3">TENS Entrante 3</label>
-                    <select id="funcionario_entrante_3" name="funcionario_entrante_3" class="form-select form-select-sm" required>
+                    <select id="funcionario_entrante_3" name="funcionario_entrante_3" class="form-select form-select-sm" required onchange="setNombreYPinFuncionario('funcionario_entrante_3', 'nombre_funcionario_entrante_3', 'pin_funcionario_entrante_3')">
                         <option value="">-Seleccione Funcionario-</option>
                         <?php
                         mysqli_data_seek($result, 0); //vuelve a leer los datos del resultado
@@ -269,29 +284,100 @@ if (!$result) {
                                 $nombre_funcionarios = $row['nombre_funcionarios'];
                                 $rut_funcionarios = $row['rut_funcionarios'];
                                 $pin_funcionarios = $row['pin_funcionarios'];
-                                echo "<option value='$id_funcionarios' data-pin='$pin_funcionarios'>$nombre_funcionarios - $rut_funcionarios</option>";
+                                echo "<option value='$id_funcionarios' data-nombre='$nombre_funcionarios' data-pin='$pin_funcionarios'>$nombre_funcionarios - $rut_funcionarios</option>";
                             }
                         } else {
-                            echo "<option value=''>No hay enfermeros disponibles</option>";
+                            echo "<option value=''>No hay disponibles</option>";
                         }
                         ?>
                     </select>
+                    <input type="hidden" id="nombre_funcionario_entrante_3" name="nombre_funcionario_entrante_3">
+                    <input type="hidden" id="pin_funcionario_entrante_3" name="pin_funcionario_entrante_3">
                 </div>
             </div>
+
             <br><br>
 
             <!-- BOTÓN ENVIAR -->
             <div class="d-grid gap-2 col-4 mx-auto">
                 <button type="submit" onclick="return validarYEnviar();" class="btn btn-danger">Entregar Turno</button>
             </div>
-        </form>
-    </div>
 
-    <script src="/js/funcion_agregarfuncionario.js"></script>
-    <script src="/js/funcion_obtenerpin.js"></script>
-    <script src="/js/funcion_validaryEnviar.js"></script>
-    <script src="/js/funcion_mostrarcampotexto.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-1CmRugG5aX5+I65R5BxDJjkGrtGk5r0PZ8iFv/V3+6Q/3D3De0hN/y4XXMn+Q3fj" crossorigin="anonymous"></script>
+            <script>
+                function setNombreYPinFuncionario(selectId, nombreId, pinId) {
+                    var selectElement = document.getElementById(selectId);
+                    var selectedOption = selectElement.options[selectElement.selectedIndex];
+                    var nombreFuncionario = selectedOption.getAttribute('data-nombre');
+                    var pinFuncionario = selectedOption.getAttribute('data-pin');
+
+                    document.getElementById(nombreId).value = nombreFuncionario;
+                    document.getElementById(pinId).value = pinFuncionario;
+                }
+
+                function validarYEnviar(event) {
+                    const funcionario1 = document.getElementById('funcionario_saliente_1');
+                    const contraseña1 = document.getElementById('contrasena_saliente_1');
+                    const funcionario2 = document.getElementById('funcionario_saliente_2');
+                    const contraseña2 = document.getElementById('contrasena_saliente_2');
+                    const funcionario3 = document.getElementById('funcionario_saliente_3');
+                    const contraseña3 = document.getElementById('contrasena_saliente_3');
+
+                    if (!funcionario1 || !funcionario2 || !funcionario3 || !contraseña1 || !contraseña2 || !contraseña3) {
+                        alert('Error: No se encontraron los campos de funcionarios o PIN.');
+                        event.preventDefault();
+                        return false;
+                    }
+
+                    // Verificar que se haya seleccionado un funcionario
+                    if (funcionario1.value === "" || funcionario2.value === "" || funcionario3.value === "") {
+                        alert('Por favor, selecciona todos los funcionarios.');
+                        event.preventDefault();
+                        return false;
+                    }
+
+                    // Obtener los PINs
+                    const pinCorrecto1 = funcionario1.options[funcionario1.selectedIndex].getAttribute('data-pin');
+                    const pinCorrecto2 = funcionario2.options[funcionario2.selectedIndex].getAttribute('data-pin');
+                    const pinCorrecto3 = funcionario3.options[funcionario3.selectedIndex].getAttribute('data-pin');
+
+                    if (!pinCorrecto1 || !pinCorrecto2 || !pinCorrecto3) {
+                        alert('Error: No se encontraron los PINs de los funcionarios.');
+                        event.preventDefault();
+                        return false;
+                    }
+
+                    if (contraseña1.value.trim() !== pinCorrecto1.trim()) {
+                        alert('El PIN del Funcionario 1 es incorrecto.');
+                        event.preventDefault();
+                        return false;
+                    }
+
+                    if (contraseña2.value.trim() !== pinCorrecto2.trim()) {
+                        alert('El PIN del Funcionario 2 es incorrecto.');
+                        event.preventDefault();
+                        return false;
+                    }
+
+                    if (contraseña3.value.trim() !== pinCorrecto3.trim()) {
+                        alert('El PIN del Funcionario 3 es incorrecto.');
+                        event.preventDefault();
+                        return false;
+                    }
+
+                    return true;
+                }
+
+                document.querySelector('form').addEventListener('submit', function(event) {
+                    if (!validarYEnviar(event)) {
+                        event.preventDefault();
+                    }
+                });
+            </script>
+
+            <script src="/js/funcion_agregarfuncionario.js"></script>
+            <script src="/js/funcion_obtenerpin.js"></script>
+            <script src="/js/funcion_mostrarcampotexto.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-1CmRugG5aX5+I65R5BxDJjkGrtGk5r0PZ8iFv/V3+6Q/3D3De0hN/y4XXMn+Q3fj" crossorigin="anonymous"></script>
 </body>
 
 </html>
