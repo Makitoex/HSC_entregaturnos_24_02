@@ -2,17 +2,46 @@
 include 'conexion.php';
 
 $table = $_GET['table'] ?? '';
+$search = $_GET['search'] ?? '';
+$startDate = $_GET['startDate'] ?? '';
+$endDate = $_GET['endDate'] ?? '';
 
 if ($table) {
-    // Modifica la consulta SQL para incluir un JOIN con la tabla de usuarios
+    // Construye la consulta SQL con filtros
     $sql = "SELECT * FROM $table";
+    $conditions = [];
+
+    if ($search) {
+        // Obtiene nombres de columnas para construir la búsqueda
+        $result = $conn->query("DESCRIBE $table");
+        $columns = [];
+        while ($row = $result->fetch_assoc()) {
+            $columns[] = $row['Field'];
+        }
+
+        // Construye la condición de búsqueda
+        $searchConditions = [];
+        foreach ($columns as $column) {
+            $searchConditions[] = "$column LIKE '%$search%'";
+        }
+        $conditions[] = '(' . implode(' OR ', $searchConditions) . ')';
+    }
+
+    if ($startDate && $endDate) {
+        $conditions[] = "fecha BETWEEN '$startDate' AND '$endDate'";
+    }
+
+    if (count($conditions) > 0) {
+        $sql .= " WHERE " . implode(" AND ", $conditions);
+    }
+
     $result = $conn->query($sql);
 
     $columns = [];
     $rows = [];
 
     if ($result->num_rows > 0) {
-        // Obtiene nombres de columnas y filtra la columna de contraseña lo que tenga contraseña se vuelve false y no muestra
+        // Obtiene nombres de columnas y filtra la columna de contraseña
         $all_columns = array_keys($result->fetch_assoc());
         $columns = array_filter($all_columns, function($col) {
             return stripos($col, 'contrasena') === false;

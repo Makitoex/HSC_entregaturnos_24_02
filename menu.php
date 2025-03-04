@@ -31,7 +31,7 @@ $nombre_servicio = $row_servicio['nombre_servicio'] ?? "No asignado";
 $stmt->close();
 
 // Depuración: verificar el valor de $nombre_servicio
-// echo "Servicio: " . htmlspecialchars($nombre_servicio);
+echo "Servicio: " . htmlspecialchars($nombre_servicio);
 
 if (stripos($nombre_servicio, "uti_tens") !== false) {
     $tabla = "formulario_turnos_uti_tens";
@@ -154,6 +154,20 @@ if (stripos($nombre_servicio, "uti_tens") !== false) {
               ORDER BY f.id DESC
               LIMIT ?, ?";
     $total_query = "SELECT COUNT(*) AS total FROM $tabla";
+} elseif (stripos($nombre_servicio, "tecnologos") !== false) { // Ajuste aquí
+    $tabla = "formulario_turnos_tecnologos_medicos";
+    $query = "SELECT 
+                tm.id,
+                tm.fecha,
+                fs1.nombre_funcionarios AS funcionario_saliente_1,
+                fe1.nombre_funcionarios AS funcionario_entrante_1,
+                tm.tipoturno
+              FROM $tabla tm
+              LEFT JOIN funcionarios_uti fs1 ON tm.funcionario_saliente_1 = fs1.id_funcionarios
+              LEFT JOIN funcionarios_uti fe1 ON tm.funcionario_entrante_1 = fe1.id_funcionarios
+              ORDER BY tm.id DESC
+              LIMIT ?, ?";
+    $total_query = "SELECT COUNT(*) AS total FROM $tabla";
 } else {
     // Default
     $tabla = "formulario_turnos_uti_enfermeros";
@@ -175,7 +189,6 @@ if (stripos($nombre_servicio, "uti_tens") !== false) {
     $total_query = "SELECT COUNT(*) AS total FROM $tabla";
 }
 
-
 if (!empty($total_query)) {
     $total_result = mysqli_query($conn, $total_query);
     if ($total_result) {
@@ -186,7 +199,6 @@ if (!empty($total_query)) {
         die("Error al obtener el total de registros: " . mysqli_error($conn));
     }
 } else {
-
     die("Error: $total_query es vacio o invalido.");
 }
 
@@ -283,31 +295,28 @@ $result = $stmt->get_result();
         <h2 class="menu-title">Menú Principal</h2>
         <?php if (stripos($nombre_servicio, "uci_enfermeros") !== false): ?>
             <a href="/formularios_php/UCI_formulario_enfermeros.php?tipo=uci_enfermeros">Entregar Turno UCI Enfermeros</a>
-
         <?php elseif (stripos($nombre_servicio, "enfermeros") !== false): ?>
             <a href="/formularios_php/UTI_formulario_enfermeros.php?tipo=uti">Entregar Turno Enfermeros UTI</a>
-
         <?php elseif (stripos($nombre_servicio, "uci_tens") !== false): ?>
             <a href="/formularios_php/UCI_formulario_tens.php?tipo=uci_tens">Entregar Turno TENS UCI</a>
-
         <?php elseif (stripos($nombre_servicio, "uti_tens") !== false): ?>
             <a href="/formularios_php/UTI_formulario_tens.php?tipo=tens">Entregar Turno TENS</a>
-
         <?php elseif (stripos($nombre_servicio, "uci_kinesiologos") !== false): ?>
             <a href="/formularios_php/UCI_formulario_kinesiologos.php?tipo=kinesio">Entregar Turno Kinesiología UCI</a>
-
         <?php elseif (stripos($nombre_servicio, "kinesiologos") !== false): ?>
             <a href="/formularios_php/UTI_formulario_kinesiologos.php?tipo=kinesio">Entregar Turno Kinesiología UTI</a>
-
         <?php elseif (stripos($nombre_servicio, "upc_medicos") !== false): ?>
             <a href="/formularios_php/UPC_formulario_medicos.php?tipo=medicos">Entregar Turno UPC Medicos</a>
-
+        <?php elseif (stripos($nombre_servicio, "tecnologos") !== false): ?>
+            <a href="/formularios_php/TM_formulario_tecnologosmedicos.php?tipo=tecnologos_medicos">Entregar Turno Tecnólogos Médicos</a>
         <?php else: ?>
             <p>No hay formularios disponibles para este servicio.</p>
         <?php endif; ?>
 
         <br>
         <hr>
+        <br>
+        <a href="reportes_usuario.php">Reportes Calidad</a>
         <br>
         <a href="cerrarsesion.php">Cerrar sesión</a>
     </div>
@@ -350,20 +359,12 @@ $result = $stmt->get_result();
                                 if (stripos($nombre_servicio, "uci_enfermeros") !== false) {
                                     echo htmlspecialchars($row['funcionario_saliente_1'] ?? 'N/A') . ", " .
                                         htmlspecialchars($row['funcionario_saliente_2'] ?? 'N/A');
-                                } elseif (stripos($nombre_servicio, "kinesiologos") !== false) {
+                                } elseif (stripos($nombre_servicio, "kinesiologos") !== false || stripos($nombre_servicio, "uci_kinesiologos") !== false || stripos($nombre_servicio, "upc_medicos") !== false || stripos($nombre_servicio, "tecnologosmedicos") !== false) {
                                     echo htmlspecialchars($row['funcionario_saliente_1'] ?? 'N/A');
-                                } elseif (stripos($nombre_servicio, "uci_kinesiologos") !== false) {
-                                    echo htmlspecialchars($row['funcionario_saliente_1'] ?? 'N/A');
-                                } elseif (stripos($nombre_servicio, "uti_tens") !== false) {
+                                } elseif (stripos($nombre_servicio, "uti_tens") !== false || stripos($nombre_servicio, "uci_tens") !== false) {
                                     echo htmlspecialchars($row['funcionario_saliente_1'] ?? 'N/A') . ", " .
                                         htmlspecialchars($row['funcionario_saliente_2'] ?? 'N/A') . ", " .
                                         htmlspecialchars($row['funcionario_saliente_3'] ?? 'N/A');
-                                } elseif (stripos($nombre_servicio, "uci_tens") !== false) {
-                                    echo htmlspecialchars($row['funcionario_saliente_1'] ?? 'N/A') . ", " .
-                                        htmlspecialchars($row['funcionario_saliente_2'] ?? 'N/A') . ", " .
-                                        htmlspecialchars($row['funcionario_saliente_3'] ?? 'N/A');
-                                } elseif (stripos($nombre_servicio, "upc_medicos") !== false) {
-                                    echo htmlspecialchars($row['funcionario_saliente_1'] ?? 'N/A');
                                 } else {
                                     echo htmlspecialchars($row['funcionario_saliente_1'] ?? 'N/A') . ", " .
                                         htmlspecialchars($row['funcionario_saliente_2'] ?? 'N/A');
@@ -375,15 +376,9 @@ $result = $stmt->get_result();
                                 if (stripos($nombre_servicio, "uci_enfermeros") !== false) {
                                     echo htmlspecialchars($row['funcionario_entrante_1'] ?? 'N/A') . ", " .
                                         htmlspecialchars($row['funcionario_entrante_2'] ?? 'N/A');
-                                } elseif (stripos($nombre_servicio, "uci_kinesiologos") !== false) {
-                                    echo htmlspecialchars($row['funcionario_saliente_1'] ?? 'N/A');
-                                } elseif (stripos($nombre_servicio, "kinesiologos") !== false) {
+                                } elseif (stripos($nombre_servicio, "kinesiologos") !== false || stripos($nombre_servicio, "uci_kinesiologos") !== false || stripos($nombre_servicio, "upc_medicos") !== false || stripos($nombre_servicio, "tecnologosmedicos") !== false) {
                                     echo htmlspecialchars($row['funcionario_entrante_1'] ?? 'N/A');
-                                } elseif (stripos($nombre_servicio, "uti_tens") !== false) {
-                                    echo htmlspecialchars($row['funcionario_entrante_1'] ?? 'N/A') . ", " .
-                                        htmlspecialchars($row['funcionario_entrante_2'] ?? 'N/A') . ", " .
-                                        htmlspecialchars($row['funcionario_entrante_3'] ?? 'N/A');
-                                } elseif (stripos($nombre_servicio, "uci_tens") !== false) {
+                                } elseif (stripos($nombre_servicio, "uti_tens") !== false || stripos($nombre_servicio, "uci_tens") !== false) {
                                     echo htmlspecialchars($row['funcionario_entrante_1'] ?? 'N/A') . ", " .
                                         htmlspecialchars($row['funcionario_entrante_2'] ?? 'N/A') . ", " .
                                         htmlspecialchars($row['funcionario_entrante_3'] ?? 'N/A');
@@ -394,7 +389,8 @@ $result = $stmt->get_result();
                                 ?>
                             </td>
                             <td>
-                                <?= htmlspecialchars($row['tipoturno'] ?? 'POR HORAS') ?></td>
+                                <?= htmlspecialchars($row['tipoturno'] ?? 'POR HORAS') ?>
+                            </td>
                             <td>
                                 <?php
                                 if (stripos($nombre_servicio, "uci_enfermeros") !== false) {
@@ -411,13 +407,14 @@ $result = $stmt->get_result();
                                     echo '<a href="formularios_php/generar_pdf_kinesiologos.php?id=' . $row['id'] . '" target="_blank">Generar PDF</a>';
                                 } elseif (stripos($nombre_servicio, "upc_medicos") !== false) {
                                     echo '<a href="formularios_php/generar_pdf_upc_medicos.php?id=' . $row['id'] . '" target="_blank">Generar PDF</a>';
+                                } elseif (stripos($nombre_servicio, "tecnologosmedicos") !== false) {
+                                    echo '<a href="formularios_php/generar_pdf_tecnologosmedicos.php?id=' . $row['id'] . '" target="_blank">Generar PDF</a>';
                                 }
                                 ?>
                             </td>
                         </tr>
                     <?php } ?>
                 </tbody>
-
             </table>
         </div>
         <!-- PAGINACION -->

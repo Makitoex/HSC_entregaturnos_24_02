@@ -63,7 +63,6 @@ $conn->close();
 
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -86,26 +85,26 @@ $conn->close();
             justify-content: center;
             align-items: center;
             flex-wrap: wrap;
-            max-width: 800px;
+            max-width: 500px;
             width: 100%;
         }
 
         .login-card {
             width: 100%;
-            max-width: 400px;
-            padding: 30px;
+            max-width: 300px;
+            padding: 15px;
             background: white;
             border-radius: 10px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-            margin-right: 20px;
+            margin-right: 10px;
         }
 
         .login-logo {
             position: absolute;
             top: 20px;
             right: 20px;
-            width: 100px;
-            height: 100px;
+            width: 60px;
+            height: 60px;
             border-radius: 50%;
             background: url('imagen/logohsc.ico') no-repeat center center;
             background-size: cover;
@@ -126,16 +125,19 @@ $conn->close();
 
         .error-message {
             color: red;
+            font-size: 12px;
+            margin-bottom: 10px;
+        }
+
+        .form-label, .form-control, .btn {
             font-size: 14px;
-            margin-bottom: 15px;
         }
     </style>
 </head>
-
 <body>
     <div class="login-card">
-        <h5 class="text-center mb-3 text-terciary">Entrega de Turnos Hospital Santa Cruz</h5>
-        <h6 class="text-center mb-4 text-primary">Iniciar Sesión</h6>
+        <h5 class="text-center mb-3 text-terciary" style="font-size: 16px;">Entrega de Turnos Hospital Santa Cruz</h5>
+        <h6 class="text-center mb-4 text-primary" style="font-size: 14px;">Iniciar Sesión</h6>
 
         <!-- mensaje de error aquí si existe -->
         <?php if (!empty($error_message)): ?>
@@ -152,14 +154,12 @@ $conn->close();
                 <input type="password" class="form-control" id="contraseña" name="contraseña" required>
             </div>
             <button type="submit" class="btn btn-primary w-100">INGRESAR</button>
-            <br><br><br>
-            <h7 align="center">Si olvida su contraseña por favor contactar a soporte TI</h7>
+            <p class="text-center mt-3" style="font-size: 12px;">Si olvida su contraseña, por favor contacte a soporte TI</p>
         </form>
     </div>
     <div class="login-logo">
         <a href="https://hospitalsantacruz.cl/">
-            <img src="imagen/logohsc.ico" alt="Logo" style="width: 100px; height: 100px; border-radius: 50%;"></a>
+            <img src="imagen/logohsc.ico" alt="Logo" style="width: 60px; height: 60px; border-radius: 50%;"></a>
     </div>
 </body>
-
 </html>

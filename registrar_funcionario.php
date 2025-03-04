@@ -1,12 +1,11 @@
 <?php
-include '/laragon/www/Sistema_entrega_turnos_HSC/conexion.php';
+include 'conexion.php';
 
 session_start();
 if (!isset($_SESSION['id_usuarios'])) {
     header("Location: index.php");
     exit();
 }
-include 'conexion.php';
 include 'navbar_funcionarios.php';
 
 // Variables para la paginación
@@ -17,10 +16,14 @@ $inicio = ($pagina_actual - 1) * $registros_por_pagina;
 // Obtener el término de búsqueda si existe
 $buscar = isset($_GET['buscar']) ? $_GET['buscar'] : '';
 
+// Obtener lista de servicios
+$sql_servicios = "SELECT id_servicios, nombre_servicio FROM servicios";
+$result_servicios = $conn->query($sql_servicios);
+
 // Función para eliminar un funcionario
 if (isset($_POST['eliminar'])) {
     $id_funcionario = $_POST['id_funcionario'];
-    $tabla = $_POST['tipo'] === 'UTI' ? 'funcionarios_uti' : 'funcionarios_uci';
+    $tabla = $_POST['tipo'];
 
     $sql_eliminar = "DELETE FROM $tabla WHERE id_funcionarios = ?";
     $stmt = $conn->prepare($sql_eliminar);
@@ -35,17 +38,25 @@ if (isset($_POST['eliminar'])) {
     $stmt->close();
 }
 
+// Insertar funcionario
 if ($_SERVER["REQUEST_METHOD"] == "POST" && !isset($_POST['eliminar'])) {
     $nombre = $_POST['nombre'];
     $rut = $_POST['rut'];
     $pin = $_POST['pin'];
     $id_profesion = $_POST['id_profesion'];
     $id_servicio = $_POST['id_servicio'];
+    $tipo_funcionario = $_POST['tipo_funcionario'];
 
-    // Determinar en qué tabla guardar
-    $tabla = ($id_servicio >= 5) ? 'funcionarios_uci' : 'funcionarios_uti';
+    // Determinar la tabla según el tipo de funcionario
+    if ($tipo_funcionario === 'UTI') {
+        $tabla = 'funcionarios_uti';
+    } elseif ($tipo_funcionario === 'UCI') {
+        $tabla = 'funcionarios_uci';
+    } else {
+        $tabla = 'funcionarios_imagenologia';
+    }
 
-    // Insertar datos en la tabla correspondiente
+    // Insertar en la tabla correspondiente
     $sql = "INSERT INTO $tabla (id_profesion, nombre_funcionarios, rut_funcionarios, pin_funcionarios, id_servicio) VALUES (?, ?, ?, ?, ?)";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("isssi", $id_profesion, $nombre, $rut, $pin, $id_servicio);
@@ -69,6 +80,11 @@ $sql_lista = "(SELECT f.id_funcionarios, f.nombre_funcionarios, f.rut_funcionari
                FROM funcionarios_uci f
                INNER JOIN profesiones p ON f.id_profesion = p.id_profesion
                WHERE f.nombre_funcionarios LIKE '%$buscar%' OR f.rut_funcionarios LIKE '%$buscar%')
+              UNION
+              (SELECT f.id_funcionarios, f.nombre_funcionarios, f.rut_funcionarios, p.nombre_profesion, f.id_servicio, 'Imagenología' AS tipo
+               FROM funcionarios_imagenologia f
+               INNER JOIN profesiones p ON f.id_profesion = p.id_profesion
+               WHERE f.nombre_funcionarios LIKE '%$buscar%' OR f.rut_funcionarios LIKE '%$buscar%')
               LIMIT $inicio, $registros_por_pagina";
 
 $resultado = $conn->query($sql_lista);
@@ -76,7 +92,9 @@ $resultado = $conn->query($sql_lista);
 // Contar el total de registros para la paginación
 $sql_total = "(SELECT COUNT(*) AS total FROM funcionarios_uti WHERE nombre_funcionarios LIKE '%$buscar%' OR rut_funcionarios LIKE '%$buscar%')
               UNION
-              (SELECT COUNT(*) AS total FROM funcionarios_uci WHERE nombre_funcionarios LIKE '%$buscar%' OR rut_funcionarios LIKE '%$buscar%')";
+              (SELECT COUNT(*) AS total FROM funcionarios_uci WHERE nombre_funcionarios LIKE '%$buscar%' OR rut_funcionarios LIKE '%$buscar%')
+              UNION
+              (SELECT COUNT(*) AS total FROM funcionarios_imagenologia WHERE nombre_funcionarios LIKE '%$buscar%' OR rut_funcionarios LIKE '%$buscar%')";
 $total_result = $conn->query($sql_total);
 $total_registros = 0;
 while ($fila = $total_result->fetch_assoc()) {
@@ -109,22 +127,22 @@ $conn->close();
     <div class="card p-3 mb-3">
         <form method="POST" action="">
             <div class="row">
-                <div class="col-md-6 mb-2">
+                <div class="col-md-4 mb-2">
                     <label class="form-label">Nombre:</label>
                     <input type="text" name="nombre" class="form-control form-control-sm" required>
                 </div>
 
-                <div class="col-md-6 mb-2">
+                <div class="col-md-4 mb-2">
                     <label class="form-label">RUT:</label>
                     <input type="text" name="rut" class="form-control form-control-sm" required>
                 </div>
 
-                <div class="col-md-6 mb-2">
+                <div class="col-md-4 mb-2">
                     <label class="form-label">PIN:</label>
                     <input type="password" name="pin" class="form-control form-control-sm" required>
                 </div>
 
-                <div class="col-md-6 mb-2">
+                <div class="col-md-4 mb-2">
                     <label class="form-label">Profesión:</label>
                     <select name="id_profesion" class="form-select form-select-sm" required>
                         <option value="1">Médico</option>
@@ -136,16 +154,22 @@ $conn->close();
                     </select>
                 </div>
 
-                <div class="col-md-6 mb-2">
+                <div class="col-md-4 mb-2">
                     <label class="form-label">Servicio:</label>
                     <select name="id_servicio" class="form-select form-select-sm" required>
-                        <option value="1">UTI Enfermeros</option>
-                        <option value="2">UTI TENS</option>
-                        <option value="3">UTI Kinesiólogos</option>
-                        <option value="4">UPC Médicos</option>
-                        <option value="5">UCI Enfermeros</option>
-                        <option value="6">UCI Kinesiólogos</option>
-                        <option value="7">UCI TENS</option>
+                        <option value="">Seleccione un servicio</option>
+                        <?php while ($fila_servicio = $result_servicios->fetch_assoc()): ?>
+                            <option value="<?= $fila_servicio['id_servicios'] ?>"><?= $fila_servicio['nombre_servicio'] ?></option>
+                        <?php endwhile; ?>
+                    </select>
+                </div>
+
+                <div class="col-md-4 mb-2">
+                    <label class="form-label">Tipo de Funcionario:</label>
+                    <select name="tipo_funcionario" class="form-select form-select-sm" required>
+                        <option value="UTI">UTI</option>
+                        <option value="UCI">UCI</option>
+                        <option value="Imagenología">Imagenología</option>
                     </select>
                 </div>
 

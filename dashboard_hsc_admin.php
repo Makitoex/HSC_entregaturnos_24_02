@@ -72,26 +72,36 @@ $stmt->close();
             align-items: center;
             margin: 20px 0;
             flex-wrap: wrap;
-            gap: 5px;
+            gap: 10px;
         }
 
         .selector-container select {
             padding: 10px;
-            border-radius: 5px;
+            border-radius: 25px;
             border: 1px solid rgb(0, 0, 0);
             background-color: #f8f9fa;
             margin-right: 20px;
             margin-bottom: 10px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .selector-container select:hover {
+            background-color: rgb(255, 238, 238);
+            border-color: rgb(182, 10, 10);
         }
 
         .selector-container button {
             padding: 10px 20px;
-            border-radius: 5px;
+            border-radius: 25px;
             border: none;
             background-color: rgb(182, 10, 10);
             color: white;
             cursor: pointer;
             margin-bottom: 10px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s;
         }
 
         .selector-container button:hover {

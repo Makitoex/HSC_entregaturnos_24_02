@@ -20,44 +20,6 @@ $tablas = [
     "formulario_turnos_uti_tens"
 ];
 
-// Función para obtener las columnas de una tabla
-function obtenerColumnas($conexion, $tabla)
-{
-    $query = "DESCRIBE $tabla";
-    $resultado = mysqli_query($conexion, $query);
-    $columnas = [];
-    while ($columna = mysqli_fetch_assoc($resultado)) {
-        $columnas[] = $columna['Field'];
-    }
-    return $columnas;
-}
-
-// Función para obtener las filas de una tabla con filtros
-function obtenerFilas($conexion, $tabla, $search = '', $startDate = '', $endDate = '')
-{
-    $query = "SELECT * FROM $tabla";
-    $conditions = [];
-
-    if ($search) {
-        $conditions[] = "CONCAT_WS(' ', " . implode(", ", obtenerColumnas($conexion, $tabla)) . ") LIKE '%$search%'";
-    }
-
-    if ($startDate && $endDate) {
-        $conditions[] = "fecha BETWEEN '$startDate' AND '$endDate'";
-    }
-
-    if (count($conditions) > 0) {
-        $query .= " WHERE " . implode(" AND ", $conditions);
-    }
-
-    $resultado = mysqli_query($conexion, $query);
-    $filas = [];
-    while ($fila = mysqli_fetch_assoc($resultado)) {
-        $filas[] = $fila;
-    }
-    return $filas;
-}
-
 include 'navbar_calidad.php';
 ?>
 
@@ -68,9 +30,11 @@ include 'navbar_calidad.php';
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Visualización de Formularios</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="styles.css">
     <style>
-        /* Estilos generales */
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Montserrat:wght@700&display=swap');
+
         body {
             font-family: 'Roboto', sans-serif;
             margin: 0;
@@ -79,8 +43,8 @@ include 'navbar_calidad.php';
         }
 
         .container {
-            width: 85%;
-            margin: 0 auto;
+            width: 100%;
+            margin: 30px auto;
             padding: 30px;
             background-color: #ffffff;
             border-radius: 12px;
@@ -88,17 +52,22 @@ include 'navbar_calidad.php';
             overflow: hidden;
         }
 
-        h1,
-        h2 {
+        h1 {
             text-align: center;
             color: #333;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 2.5em;
+        }
+
+        h2 {
+            text-align: center;
+            color: #555;
         }
 
         hr {
             border: 1px solid #e0e0e0;
         }
 
-        /* Estilos del selector y formulario */
         .selector-container {
             display: flex;
             justify-content: space-between;
@@ -106,37 +75,13 @@ include 'navbar_calidad.php';
             margin-bottom: 20px;
         }
 
-        select,
-        input[type="text"],
-        input[type="date"],
-        button {
-            padding: 12px 18px;
-            font-size: 16px;
+        .custom-select,
+        .form-control,
+        .btn {
             margin-right: 10px;
-            border: 1px solid #ccc;
-            border-radius: 8px;
             transition: all 0.3s ease;
         }
 
-        select,
-        input[type="text"],
-        input[type="date"] {
-            width: 250px;
-        }
-
-        button {
-            background-color: #007bff;
-            color: white;
-            border: none;
-            cursor: pointer;
-            font-weight: bold;
-        }
-
-        button:hover {
-            background-color: #0056b3;
-        }
-
-        /* Estilos de la tabla */
         .table-container {
             overflow-x: auto;
             margin-top: 30px;
@@ -164,7 +109,6 @@ include 'navbar_calidad.php';
             background-color: #f9f9f9;
         }
 
-        /* Paginación */
         .pagination {
             display: flex;
             justify-content: center;
@@ -178,24 +122,24 @@ include 'navbar_calidad.php';
             border-radius: 5px;
             background-color: #f4f4f4;
             cursor: pointer;
-            color: #007bff; /* Cambia el color del texto de los botones */
+            color: #007bff;
             transition: all 0.3s ease;
         }
 
         .pagination button.active {
-            background-color:rgb(0, 255, 221);
+            background-color: #007bff;
             color: white;
         }
 
         .pagination button:hover {
-            background-color: #ddd;
+            background-color: #0056b3;
+            color: white;
         }
 
         .pagination button.active:hover {
             background-color: #0056b3;
         }
 
-        /* Barra de búsqueda */
         .search-container {
             display: flex;
             align-items: center;
@@ -203,55 +147,57 @@ include 'navbar_calidad.php';
             margin-top: 20px;
         }
 
-        .search-container input[type="text"],
-        .search-container input[type="date"] {
+        .search-container .form-control {
             width: 200px;
         }
 
-        .search-container button {
-            background-color:rgb(201, 11, 11);
+        .search-container .btn {
+            background-color: #007bff;
             border: none;
-            padding: 10px 20px;
             color: white;
-            cursor: pointer;
         }
 
-        .search-container button:hover {
-            background-color:rgb(7, 69, 163);
+        .search-container .btn:hover {
+            background-color: #0056b3;
+        }
+
+        .logo {
+            display: block;
+            margin-bottom: 20px;
+            max-width: 100px;
         }
     </style>
 </head>
 
 <body>
     <div class="container">
+        <img src="imagen/logohsf02.jpg" alt="Logo HSF" class="logo float-left">
         <h1>Formularios Registrados</h1>
         <hr>
-        <h2 id="selectedTableTitle" style="color: #555;"></h2>
+        <h2 id="selectedTableTitle"></h2>
         <div class="selector-container">
-            <select id="tableSelector">
+            <select id="tableSelector" class="custom-select">
                 <option value="">--Seleccione--</option>
                 <?php foreach ($tablas as $tabla) { ?>
                     <option value="<?php echo $tabla; ?>"><?php echo str_replace('_', ' ', ucwords($tabla)); ?></option>
                 <?php } ?>
             </select>
-            <button onclick="loadTable()">Cargar Tabla</button>
-            <form action="generar_excel.php" method="post" style="display: inline-block; width: 100%;">
+            <button class="btn btn-primary" onclick="loadTable()">Cargar Tabla</button>
+            <form action="generar_excel.php" method="post" style="display: inline-block;">
                 <input type="hidden" name="table" id="selectedTable">
-                <button type="submit">Generar Excel</button>
+                <button type="submit" class="btn btn-success">Generar Excel</button>
             </form>
         </div>
 
-        <!-- Barra de búsqueda general y por fecha -->
         <div class="search-container">
-            <input type="text" id="searchText" placeholder="Buscar registros..." oninput="loadTable()">
-            <input type="date" id="startDate" onchange="loadTable()">
-            <input type="date" id="endDate" onchange="loadTable()">
-            <button onclick="loadTable()">Buscar</button>
+            <input type="text" id="searchText" class="form-control" placeholder="Buscar registros..." oninput="loadTable()">
+            <input type="date" id="startDate" class="form-control" onchange="loadTable()">
+            <input type="date" id="endDate" class="form-control" onchange="loadTable()">
+            <button class="btn btn-danger" onclick="loadTable()">Buscar</button>
         </div>
 
-        <!-- Contenedor de tablas -->
         <div class="table-container" id="tableContainer">
-            <table id="dataTable">
+            <table id="dataTable" class="table table-striped">
                 <thead>
                     <tr id="tableHeader"></tr>
                 </thead>
@@ -259,7 +205,6 @@ include 'navbar_calidad.php';
             </table>
         </div>
 
-        <!-- Paginación -->
         <div class="pagination" id="pagination"></div>
     </div>
 
@@ -287,7 +232,7 @@ include 'navbar_calidad.php';
 
             if (tableSelector === "") return;
 
-            fetch('cargar_tabla.php?table=' + tableSelector + '&search=' + searchText + '&startDate=' + startDate + '&endDate=' + endDate)
+            fetch(`cargar_tabla.php?table=${tableSelector}&search=${searchText}&startDate=${startDate}&endDate=${endDate}`)
                 .then(response => response.json())
                 .then(data => {
                     tableHeader.innerHTML = '';
@@ -311,10 +256,11 @@ include 'navbar_calidad.php';
                                 tr.appendChild(td);
                             });
 
-                            // Crear el botón "Generar PDF"
+                            // Añadir botón para generar PDF
                             const td = document.createElement('td');
                             const generatePdfButton = document.createElement('button');
                             generatePdfButton.textContent = "Generar PDF";
+                            generatePdfButton.classList.add('btn', 'btn-outline-primary');
                             generatePdfButton.onclick = function() {
                                 generarPdf(row, data.columns, tableSelector);
                             };
@@ -343,9 +289,7 @@ include 'navbar_calidad.php';
             for (let i = 1; i <= totalPages; i++) {
                 const button = document.createElement('button');
                 button.textContent = i;
-
-                // Asegurarse de que todos los botones tengan texto visible
-                button.style.color = '#007bff'; 
+                button.classList.add('btn', 'btn-light');
 
                 if (i === currentPage) {
                     button.classList.add('active');

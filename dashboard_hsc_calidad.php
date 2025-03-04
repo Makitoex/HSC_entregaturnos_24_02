@@ -165,7 +165,7 @@ $stmt->close();
                 <h3>Ver Formularios</h3>
                 <p>Accede a todos los formularios ingresados por los usuarios.</p>
             </div>
-            <div class="option" onclick="location.href='reportes.php'">
+            <div class="option" onclick="location.href='reportes_calidad.php'">
                 <h3>Generar Reportes</h3>
                 <p>Genera reportes detallados de la calidad de los datos.</p>
             </div>

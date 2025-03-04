@@ -17,7 +17,7 @@ mysqli_set_charset($conn, "utf8mb4");
 $fecha_actual = date("Y-m-d");
 
 // CONSULTA PARA OBTENER LOS FUNCIONARIOS DE UCI
-$sql = "SELECT id_funcionarios, id_profesion, nombre_funcionarios, rut_funcionarios, pin_funcionarios FROM funcionarios_uci WHERE id_servicio = 5 ORDER BY id_funcionarios";
+$sql = "SELECT id_funcionarios, id_profesion, nombre_funcionarios, rut_funcionarios, pin_funcionarios FROM funcionarios_imagenologia WHERE id_servicio = 8 ORDER BY id_funcionarios";
 $result = mysqli_query($conn, $sql);
 
 if (!$result) {
@@ -41,6 +41,7 @@ if (!$result) {
         <br>
         <h2 class="text-center">Entrega De Turno Tecnologos Medicos</h2>
         <p class="text-center">Hospital Santa Cruz</p>
+        <form id="formEntregaTurno" action="guardar_turno_im_tecnologosmedicos.php" method="POST">
         <br><br>
 
         <!--FECHA Y TURNO-->
@@ -212,61 +213,74 @@ if (!$result) {
 
         <br>
         <!-- KINE TURNANTES -->
-        <h6 class="text-center">Entrega de Turnos:</h6>
-        <br>
-
-        <div class="row">
-            <div class="col-md-6 mb-3">
-                <label for="funcionario_saliente_1">Tecnologo Medico Saliente 1</label>
-                <select id="funcionario_saliente_1" name="funcionario_saliente_1" class="form-select form-select-sm" required>
-                    <option value="">-Seleccione Funcionario-</option>
-                    <?php
-                    if (mysqli_num_rows($result) > 0) {
-                        while ($row = mysqli_fetch_assoc($result)) {
-                            $id_funcionarios = $row['id_funcionarios'];
-                            $nombre_funcionarios = $row['nombre_funcionarios'];
-                            $rut_funcionarios = $row['rut_funcionarios'];
-                            echo "<option value='$id_funcionarios'>$nombre_funcionarios - $rut_funcionarios</option>";
+        <h6 class="text-center">Tecnologos Medicos Turnantes:</h6>
+            <br>
+            <div class="row">
+                <!-- Tecnologo Saliente 1 -->
+                <div class="col-md-6 mb-3">
+                    <label for="funcionario_saliente_1">TM Saliente 1</label>
+                    <select id="funcionario_saliente_1" name="funcionario_saliente_1" class="form-select form-select-sm" required onchange="setNombreFuncionario('funcionario_saliente_1', 'nombre_funcionario_saliente_1')">
+                        <option value="">-Seleccione Funcionario-</option>
+                        <?php
+                        mysqli_data_seek($result, 0); //vuelve a leer los datos del resultado
+                        if (mysqli_num_rows($result) > 0) {
+                            while ($row = mysqli_fetch_assoc($result)) {
+                                $id_funcionarios = $row['id_funcionarios'];
+                                $nombre_funcionarios = $row['nombre_funcionarios'];
+                                $rut_funcionarios = $row['rut_funcionarios'];
+                                $pin_funcionarios = $row['pin_funcionarios'];
+                                echo "<option value='$id_funcionarios' data-nombre='$nombre_funcionarios' data-pin='$pin_funcionarios'>$nombre_funcionarios - $rut_funcionarios</option>";
+                            }
+                        } else {
+                            echo "<option value=''>No hay TM disponibles</option>";
                         }
-                    } else {
-                        echo "<option value=''>No hay disponibles</option>";
-                    }
-                    ?>
+                        ?>
+                    </select>
+                    <input type="hidden" id="nombre_funcionario_saliente_1" name="nombre_funcionario_saliente_1">
                     <input type="password" id="contrasena_saliente_1" name="contrasena_saliente_1" placeholder="Ingrese Contraseña TM.1" required class="form-control form-control-sm mt-2">
-                </select>
+                </div>
+                <!--  TM Entrante 1 -->
+                <div class="col-md-6 mb-3">
+                    <label for="funcionario_entrante_1">TM Entrante 1</label>
+                    <select id="funcionario_entrante_1" name="funcionario_entrante_1" class="form-select form-select-sm" required onchange="setNombreFuncionario('funcionario_entrante_1', 'nombre_funcionario_entrante_1')">
+                        <option value="">-Seleccione Funcionario-</option>
+                        <?php
+                        mysqli_data_seek($result, 0); //vuelve a leer los datos del resultado
+                        if (mysqli_num_rows($result) > 0) {
+                            while ($row = mysqli_fetch_assoc($result)) {
+                                $id_funcionarios = $row['id_funcionarios'];
+                                $nombre_funcionarios = $row['nombre_funcionarios'];
+                                $rut_funcionarios = $row['rut_funcionarios'];
+                                $pin_funcionarios = $row['pin_funcionarios'];
+                                echo "<option value='$id_funcionarios' data-nombre='$nombre_funcionarios'>$nombre_funcionarios - $rut_funcionarios</option>";
+                            }
+                        } else {
+                            echo "<option value=''>No hay TM disponibles</option>";
+                        }
+                        ?>
+                    </select>
+                    <input type="hidden" id="nombre_funcionario_entrante_1" name="nombre_funcionario_entrante_1">
+                </div>
             </div>
 
-            <div class="col-md-6 mb-3">
-                <label for="funcionario_entrante_1">Tecnologo Medico Entrante 1</label>
-                <select id="funcionario_entrante_1" name="funcionario_entrante_1" class="form-select form-select-sm" required>
-                    <option value="">-Seleccione Funcionario-</option>
-                    <?php
-                    mysqli_data_seek($result, 0); // Reinicia el puntero de los resultados
-                    if (mysqli_num_rows($result) > 0) {
-                        while ($row = mysqli_fetch_assoc($result)) {
-                            $id_funcionarios = $row['id_funcionarios'];
-                            $nombre_funcionarios = $row['nombre_funcionarios'];
-                            $rut_funcionarios = $row['rut_funcionarios'];
-                            echo "<option value='$id_funcionarios'>$nombre_funcionarios - $rut_funcionarios</option>";
-                        }
-                    } else {
-                        echo "<option value=''>No hay disponibles</option>";
-                    }
-                    ?>
-                </select>
-            </div>
-        </div>
         <br><br>
+        <!--Boton ENVIAR FORMULARIO-->
         <div class="d-grid gap-2 col-4 mx-auto">
-            <button type="submit" onclick="return validarYEnviar();" class="btn btn-danger">Entregar Turno</button>
+            <button type="submit" class="btn btn-danger">Entregar Turno</button>
         </div>
         <br>
         <hr>
+    </form>
     </div>
-
-    <!-- SCRIPT PARA ABRIR UN TEXTAREA DEL EN CASO DE QUE SE HAYA UTILIZADO EL CARRO -->
     <script>
-        document.getElementById('carrodeparos').addEventListener('change', function() {
+    function setNombreFuncionario(selectId, nombreId) {
+        var selectElement = document.getElementById(selectId);
+        var selectedOption = selectElement.options[selectElement.selectedIndex];
+        var nombreFuncionario = selectedOption.getAttribute('data-nombre');
+        document.getElementById(nombreId).value = nombreFuncionario;
+    }
+
+    document.getElementById('carrodeparos').addEventListener('change', function() {
             var reasonContainer = document.getElementById('carroutilizado-container');
             if (this.value === 'Si_carrodeparos') {
                 reasonContainer.style.display = 'block';
@@ -274,7 +288,43 @@ if (!$result) {
                 reasonContainer.style.display = 'none';
             }
         });
+
+    // Añadir el manejador del evento submit al formulario
+    document.getElementById('formEntregaTurno').addEventListener('submit', function(event) {
+        validarYEnviar(event);
+    });
+
+    function validarYEnviar(event) {
+        const funcionario1 = document.getElementById('funcionario_saliente_1');
+        const contrasena1 = document.getElementById('contrasena_saliente_1');
+        if (!funcionario1 || !contrasena1) {
+            alert('Error: No se encontraron los campos de funcionarios o PIN.');
+            event.preventDefault();
+            return false;
+        }
+        // Verificar que se haya seleccionado un funcionario
+        if (funcionario1.value === "") {
+            alert('Por favor, selecciona el funcionario.');
+            event.preventDefault();
+            return false;
+        }
+        // Obtener el PIN
+        const pinCorrecto1 = funcionario1.options[funcionario1.selectedIndex].getAttribute('data-pin');
+        if (!pinCorrecto1) {
+            alert('Error: No se encontró el PIN del funcionario.');
+            event.preventDefault();
+            return false;
+        }
+        if (contrasena1.value.trim() !== pinCorrecto1.trim()) {
+            alert('El PIN del Funcionario es incorrecto.');
+            event.preventDefault();
+            return false;
+        }
+        // Si todo es correcto, permitir el envío del formulario
+        return true;
+    }
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>
