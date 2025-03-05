@@ -141,14 +141,16 @@ $stmt->close();
 
         /* Estilos para el modal */
         #passwordModal {
-            display: none; 
+            display: none;
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.5); /* Fondo semi-transparente */
-            z-index: 9999; /* Asegura que se muestre sobre otros elementos */
+            background-color: rgba(0, 0, 0, 0.5);
+            /* Fondo semi-transparente */
+            z-index: 9999;
+            /* Asegura que se muestre sobre otros elementos */
             display: flex;
             justify-content: center;
             align-items: center;
@@ -166,7 +168,8 @@ $stmt->close();
 
         h2 {
             margin-bottom: 20px;
-            color: rgb(6, 60, 177); /* Color personalizado para el título */
+            color: rgb(6, 60, 177);
+            /* Color personalizado para el título */
             font-size: 20px;
         }
 
@@ -195,7 +198,8 @@ $stmt->close();
             cursor: pointer;
             font-size: 16px;
             transition: background-color 0.3s;
-            width: auto; /* Ajustar el tamaño del botón */
+            width: auto;
+            /* Ajustar el tamaño del botón */
             margin: 5px 0;
         }
 
@@ -219,6 +223,8 @@ $stmt->close();
             display: flex;
             justify-content: center;
             margin-top: 20px;
+            padding: 10px 0;
+            /* Agrega padding para separar los botones de la tabla */
         }
 
         .pagination button {
@@ -226,6 +232,10 @@ $stmt->close();
             border: 1px solid #ddd;
             background-color: white;
             cursor: pointer;
+            margin: 0 5px;
+            /* Asegura que los botones no estén demasiado pegados */
+            display: inline-block;
+            visibility: visible; /* Ensure buttons are visible */
         }
 
         .pagination button.active {
@@ -248,7 +258,7 @@ $stmt->close();
         <br>
         <hr>
         <br>
-        <h3>Administracion de Usuarios<h3>
+        <h3>Administracion de Usuarios</h3>
         <br>
         <a href="#" onclick="openPasswordModal()">Usuarios</a> <!-- Nueva opción para usuarios con modal -->
         <a href="registrar_funcionario.php">Registrar Funcionario</a> <!-- Nueva opción para registrar funcionario -->
@@ -281,6 +291,7 @@ $stmt->close();
                 <option value="formulario_turnos_uti_enfermeros">Turnos UTI Enfermeros</option>
                 <option value="formulario_turnos_uti_kinesiologos">Turnos UTI Kinesiologos</option>
                 <option value="formulario_turnos_uti_tens">Turnos UTI Tens</option>
+                <option value="formulario_turnos_tecnologos_medicos">Turnos Imagenologia TM</option>
             </select>
             <!-- barra busqueda -->
             <div class="search-container">
@@ -314,7 +325,8 @@ $stmt->close();
     </div>
 
     <!-- MODAL PARA CONTRASEÑA -->
-    <div id="passwordModal" style="display: none;"> <!-- Asegúrate de que el display inicial sea none -->
+    <div id="passwordModal" style="display: none;">
+        <!-- Asegúrate de que el display inicial sea none -->
         <div class="modal-content">
             <h2>Ingrese Contraseña</h2>
             <form id="passwordForm" onsubmit="return validatePassword()">
@@ -344,7 +356,7 @@ $stmt->close();
                 .then(data => {
                     tableHeader.innerHTML = '';
                     tableBody.innerHTML = '';
-                    currentPage = 1;
+                    currentPage = 1; // Reinicia la página a 1 cada vez que se carga una nueva tabla
 
                     if (data.columns.length > 0) {
                         data.columns.forEach(column => {
@@ -374,7 +386,7 @@ $stmt->close();
                         }, 3000);
 
                         // Actualizar paginación
-                        updatePagination();
+                        updatePagination(); // Asegúrate de actualizar la paginación
                     }
                 })
                 .catch(error => {
@@ -388,7 +400,7 @@ $stmt->close();
             const totalPages = Math.ceil(rows.length / rowsPerPage);
             const pagination = document.getElementById('pagination');
 
-            pagination.innerHTML = '';
+            pagination.innerHTML = ''; // Limpia los botones de paginación anteriores
 
             for (let i = 1; i <= totalPages; i++) {
                 const button = document.createElement('button');
@@ -398,12 +410,13 @@ $stmt->close();
                 }
                 button.addEventListener('click', () => {
                     currentPage = i;
-                    displayRows();
+                    displayRows(); // Muestra las filas de la página seleccionada
+                    updatePagination(); // Asegúrate de actualizar los botones activos
                 });
                 pagination.appendChild(button);
             }
 
-            displayRows();
+            displayRows(); // Muestra las filas de la página actual
         }
 
         function displayRows() {
@@ -433,7 +446,7 @@ $stmt->close();
             const password = document.getElementById('password').value;
 
             // Aquí puedes realizar la validación de la contraseña
-            if (password === '1234') { // Reemplaza 'contraseña_correcta' por la contraseña real
+            if (password === '1234') { // Reemplaza '1234' por la contraseña real
                 window.location.href = 'usuarios.php';
                 return false; // Evita el submit tradicional
             } else {

@@ -15,7 +15,7 @@ if ($mysqli->connect_error) {
 
 // INSERTAR EN formulario_turnos_tecnologos_medicos
 $stmt = $mysqli->prepare("INSERT INTO formulario_turnos_tecnologos_medicos (
-    fecha, tipo_turno, rx_pendientes, tc_pendientes, portatil_pendientes, 
+    fecha, tipoturno, rx_pendientes, tc_pendientes, portatil_pendientes, 
     rx_equiposoperativos, tc_equiposoperativos, portatil_equiposoperativos, 
     pacs_enviados, prueba_enviados, syngovia_enviados, codigo_carroparos, 
     carrodeparos, carroutilizado, salasyrx, inyectora, cd_grabados, 
@@ -31,7 +31,7 @@ if (!$stmt) {
 
 // VARIABLES A INSERTAR
 $fecha = $_POST['fecha'];
-$tipo_turno = $_POST['tipo_turno'];
+$tipoturno = $_POST['tipoturno'];
 $rx_pendientes = $_POST['rx_pendientes'];
 $tc_pendientes = $_POST['tc_pendientes'];
 $portatil_pendientes = $_POST['portatil_pendientes'];
@@ -59,8 +59,8 @@ $nombre_funcionario_entrante_1 = $_POST['nombre_funcionario_entrante_1'];
 
 // ASIGNAR LOS VALORES A LA CONSULTA
 $stmt->bind_param(
-    "ssssssssssssssssssssssss", 
-    $fecha, $tipo_turno, $rx_pendientes, $tc_pendientes, $portatil_pendientes, 
+    "ssssssssssssssssssssssssss", 
+    $fecha, $tipoturno, $rx_pendientes, $tc_pendientes, $portatil_pendientes, 
     $rx_equiposoperativos, $tc_equiposoperativos, $portatil_equiposoperativos, 
     $pacs_enviados, $prueba_enviados, $syngovia_enviados, $codigo_carroparos, 
     $carrodeparos, $carroutilizado, $salasyrx, $inyectora, $cd_grabados, 

@@ -144,7 +144,7 @@ $stmt->close();
         <br>
 
         <a href="ver_formularios_calidad.php">Ver Formularios</a>
-        <a href="reportes.php">Generar Reportes</a>
+        <a href="reportes_calidad.php">Generar Reportes</a>
         <a href="cerrarsesion.php">Cerrar sesión</a>
         <br>
         <br>
@@ -167,7 +167,7 @@ $stmt->close();
             </div>
             <div class="option" onclick="location.href='reportes_calidad.php'">
                 <h3>Generar Reportes</h3>
-                <p>Genera reportes detallados de la calidad de los datos.</p>
+                <p>Genera reportes detallados de la calidad de los datos dirigidos a funcionarios.</p>
             </div>
         </div>
     </div>
