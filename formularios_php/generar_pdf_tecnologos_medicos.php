@@ -15,7 +15,7 @@ $sql = "SELECT
             t.cd_grabadosotroturno, t.eventosadversos, t.pacientessospecha, t.novedades, 
             fs1.nombre_funcionarios AS funcionario_saliente_1, 
             fe1.nombre_funcionarios AS funcionario_entrante_1 
-        FROM formulario_turnos_tecnologos_medicos t
+        FROM formulario_turnos_im_tecnologos_medicos t
         LEFT JOIN funcionarios_imagenologia fs1 ON t.funcionario_saliente_1 = fs1.id_funcionarios
         LEFT JOIN funcionarios_imagenologia fe1 ON t.funcionario_entrante_1 = fe1.id_funcionarios
         WHERE t.id = ?";

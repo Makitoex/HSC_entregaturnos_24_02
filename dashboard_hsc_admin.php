@@ -291,7 +291,7 @@ $stmt->close();
                 <option value="formulario_turnos_uti_enfermeros">Turnos UTI Enfermeros</option>
                 <option value="formulario_turnos_uti_kinesiologos">Turnos UTI Kinesiologos</option>
                 <option value="formulario_turnos_uti_tens">Turnos UTI Tens</option>
-                <option value="formulario_turnos_tecnologos_medicos">Turnos Imagenologia TM</option>
+                <option value="formulario_turnos_im_tecnologos_medicos">Turnos Imagenologia TM</option>
             </select>
             <!-- barra busqueda -->
             <div class="search-container">

@@ -95,7 +95,7 @@ $conn->close();
             padding: 15px;
             background: white;
             border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.75);
             margin-right: 10px;
         }
 
@@ -136,10 +136,10 @@ $conn->close();
 </head>
 <body>
     <div class="login-card">
-        <h5 class="text-center mb-3 text-terciary" style="font-size: 16px;">Entrega de Turnos Hospital Santa Cruz</h5>
+        <h5 class="text-center mb-3 text-terciary" style="font-size: 15px;">Entrega de Turnos Hospital Santa Cruz</h5>
         <h6 class="text-center mb-4 text-primary" style="font-size: 14px;">Iniciar Sesión</h6>
 
-        <!-- mensaje de error aquí si existe -->
+        <!-- mensaje de error , si existe -->
         <?php if (!empty($error_message)): ?>
             <div class="error-message"><?php echo $error_message; ?></div>
         <?php endif; ?>

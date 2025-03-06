@@ -74,23 +74,89 @@ $total_paginas = ceil($total_registros / $registros_por_pagina);
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/css/bootstrap.min.css" rel="stylesheet">
     <link rel="icon" href="imagen/logohsc.ico" type="image/x-icon">
     <style>
-        body { font-family: 'Roboto', sans-serif; background-color: #f0f4f8; }
-        .container { width: 90%; margin: 30px auto; padding: 30px; background-color: #ffffff; border-radius: 12px; box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1); }
-        h1 { text-align: center; color: #333; font-family: 'Montserrat', sans-serif; }
-        .form-group { margin-bottom: 1.5rem; }
-        .form-control { padding: 10px; font-size: 16px; border-radius: 5px; }
-        .btn-primary { background-color: #007bff; border: none; padding: 10px 20px; font-size: 16px; border-radius: 5px; }
-        .btn-primary:hover { background-color:rgb(179, 0, 0); }
-        .table { margin-top: 20px; }
-        .logo { width: 100px; display: block; margin: 0 auto 20px; }
-        .alert { margin-top: 20px; }
-        .pagination { justify-content: center; }
+        body { 
+            font-family: 'Roboto', sans-serif; 
+            background-color: #f0f4f8; 
+        }
+        .container { 
+            width: 90%; 
+            margin: 30px auto; 
+            padding: 30px; 
+            background-color: #ffffff; 
+            border-radius: 12px; 
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1); 
+        }
+        h1 { 
+            text-align: center; 
+            color: #333; 
+            font-family: 'Montserrat', sans-serif; 
+        }
+        .form-group { 
+            margin-bottom: 1.5rem; 
+        }
+        .form-control { 
+            padding: 10px; 
+            font-size: 16px; 
+            border-radius: 5px; 
+        }
+        .btn-primary { 
+            background-color: #007bff; 
+            border: none; 
+            padding: 10px 20px; 
+            font-size: 16px; 
+            border-radius: 5px; 
+        }
+        .btn-primary:hover { 
+            background-color: #0056b3; 
+        }
+        .table { 
+            margin-top: 20px; 
+        }
+        .logo { 
+            width: 100px; 
+            display: block; 
+            margin: 0 auto 20px; 
+        }
+        .alert { 
+            margin-top: 20px; 
+        }
+        .pagination { 
+            justify-content: center; 
+        }
+        .description { 
+            text-align: center; 
+            margin-bottom: 20px; 
+            color: #666; 
+            font-size: 1.1em; 
+        }
+        .table thead {
+            background-color: #007bff;
+            color: white;
+        }
+        .table tbody tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        .table tbody tr:hover {
+            background-color: #e9ecef;
+        }
+        .pagination .page-item.active .page-link {
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+        .pagination .page-link {
+            color: #007bff;
+        }
+        .pagination .page-link:hover {
+            color: #0056b3;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <img src="/imagen/logohsf02.jpg" alt="Logo HSC" class="logo">
         <h1>Generar Reporte a Funcionarios</h1>
+        <br>
+        <p class="description">Esta página permite enviar un reporte a los usuarios sobre la entrega de turnos.</p>
         <hr>
 
         <!-- Mostrar mensaje de éxito o error -->
@@ -105,7 +171,7 @@ $total_paginas = ceil($total_registros / $registros_por_pagina);
             <div class="form-group">
                 <label for="id_usuario_destino">Destinatario:</label>
                 <select class="form-control" id="id_usuario_destino" name="id_usuario_destino" required>
-                    <option value="">Seleccione un usuario</option>
+                    <option value="">--Seleccione un usuario--</option>
                     <?php while ($row = $result_usuarios->fetch_assoc()) { ?>
                         <option value="<?php echo $row['id_usuarios']; ?>">
                             <?php echo htmlspecialchars($row['nombre']); ?>
@@ -172,7 +238,6 @@ $total_paginas = ceil($total_registros / $registros_por_pagina);
             </ul>
         </nav>
     </div>
-
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

@@ -23,7 +23,7 @@ $result_servicios = $conn->query($sql_servicios);
 // Función para eliminar un funcionario
 if (isset($_POST['eliminar'])) {
     $id_funcionario = $_POST['id_funcionario'];
-    $tabla = $_POST['tipo'];
+    $tabla = $_POST['tabla'];
 
     $sql_eliminar = "DELETE FROM $tabla WHERE id_funcionarios = ?";
     $stmt = $conn->prepare($sql_eliminar);
@@ -68,20 +68,24 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && !isset($_POST['eliminar'])) {
     }
 
     $stmt->close();
+
+    // Redirigir para evitar el reenvío del formulario
+    header("Location: {$_SERVER['PHP_SELF']}");
+    exit();
 }
 
 // Obtener lista de funcionarios con paginación y búsqueda
-$sql_lista = "(SELECT f.id_funcionarios, f.nombre_funcionarios, f.rut_funcionarios, p.nombre_profesion, f.id_servicio, 'UTI' AS tipo
+$sql_lista = "(SELECT f.id_funcionarios, f.nombre_funcionarios, f.rut_funcionarios, p.nombre_profesion, f.id_servicio, 'funcionarios_uti' AS tabla, 'UTI' AS tipo
                FROM funcionarios_uti f
                INNER JOIN profesiones p ON f.id_profesion = p.id_profesion
                WHERE f.nombre_funcionarios LIKE '%$buscar%' OR f.rut_funcionarios LIKE '%$buscar%')
               UNION
-              (SELECT f.id_funcionarios, f.nombre_funcionarios, f.rut_funcionarios, p.nombre_profesion, f.id_servicio, 'UCI' AS tipo
+              (SELECT f.id_funcionarios, f.nombre_funcionarios, f.rut_funcionarios, p.nombre_profesion, f.id_servicio, 'funcionarios_uci' AS tabla, 'UCI' AS tipo
                FROM funcionarios_uci f
                INNER JOIN profesiones p ON f.id_profesion = p.id_profesion
                WHERE f.nombre_funcionarios LIKE '%$buscar%' OR f.rut_funcionarios LIKE '%$buscar%')
               UNION
-              (SELECT f.id_funcionarios, f.nombre_funcionarios, f.rut_funcionarios, p.nombre_profesion, f.id_servicio, 'Imagenología' AS tipo
+              (SELECT f.id_funcionarios, f.nombre_funcionarios, f.rut_funcionarios, p.nombre_profesion, f.id_servicio, 'funcionarios_imagenologia' AS tabla, 'Imagenología' AS tipo
                FROM funcionarios_imagenologia f
                INNER JOIN profesiones p ON f.id_profesion = p.id_profesion
                WHERE f.nombre_funcionarios LIKE '%$buscar%' OR f.rut_funcionarios LIKE '%$buscar%')
@@ -121,7 +125,6 @@ $conn->close();
     <h3 class="text-center mb-3 fw-bold text-uppercase" style="color: #343a40; letter-spacing: 1px; text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);">
      Registro de Funcionarios
 </h3>
-
 
     <!-- Formulario de Registro -->
     <div class="card p-3 mb-3">
@@ -222,7 +225,7 @@ $conn->close();
                     <td>
                         <form method="POST" action="" style="display:inline;">
                             <input type="hidden" name="id_funcionario" value="<?= $fila['id_funcionarios'] ?>">
-                            <input type="hidden" name="tipo" value="<?= $fila['tipo'] ?>">
+                            <input type="hidden" name="tabla" value="<?= $fila['tabla'] ?>">
                             <button type="submit" name="eliminar" class="btn btn-danger btn-sm" onclick="return confirm('¿Estás seguro de que deseas eliminar este registro?')">Eliminar</button>
                         </form>
                     </td>

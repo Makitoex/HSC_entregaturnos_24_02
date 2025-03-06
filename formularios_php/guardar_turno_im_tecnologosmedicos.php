@@ -13,8 +13,8 @@ if ($mysqli->connect_error) {
     die("Error de conexión: " . $mysqli->connect_error);
 }
 
-// INSERTAR EN formulario_turnos_tecnologos_medicos
-$stmt = $mysqli->prepare("INSERT INTO formulario_turnos_tecnologos_medicos (
+// INSERTAR EN formulario_turnos_im_tecnologos_medicos
+$stmt = $mysqli->prepare("INSERT INTO formulario_turnos_im_tecnologos_medicos (
     fecha, tipoturno, rx_pendientes, tc_pendientes, portatil_pendientes, 
     rx_equiposoperativos, tc_equiposoperativos, portatil_equiposoperativos, 
     pacs_enviados, prueba_enviados, syngovia_enviados, codigo_carroparos, 
