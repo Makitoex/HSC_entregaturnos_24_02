@@ -77,7 +77,7 @@ $total_paginas = ceil($total_registros / $registros_por_pagina);
 <body>
     <div class="container">
         <img src="/imagen/logohsf02.jpg" alt="Logo HSF" class="logo">
-        <h1>Reportes Generados al Servicio</h1>
+        <h2>Reportes Generados al Servicio por Entrega de Turnos HSC</h2>
         <div class="card">
             <div class="card-header">Historial de Reportes</div>
             <div class="card-body">

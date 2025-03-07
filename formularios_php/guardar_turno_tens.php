@@ -75,7 +75,7 @@ if ($stmt->execute()) {
 
     if ($id_formulario > 0) {
         // REDIRIGIR AL PHP QUE GENERA EL PDF 
-        header("Location: generar_pdf_tens.php?id=" . $id_formulario);
+        header("Location: generar_pdf_uti_tens.php?id=" . $id_formulario);
         exit();
     } else {
         die("Error: No se pudo obtener el ID del formulario.");

@@ -173,6 +173,7 @@ $conn->close();
                         <option value="UTI">UTI</option>
                         <option value="UCI">UCI</option>
                         <option value="Imagenología">Imagenología</option>
+                        <option value="Microbiologia">Microbiologia</option>
                     </select>
                 </div>
 

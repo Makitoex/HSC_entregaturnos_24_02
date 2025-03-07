@@ -24,14 +24,91 @@ $stmt->close();
 
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Menu Admin</title>
+    <title>Dashboard de Calidad</title>
     <link rel="stylesheet" href="css/hojadeestilosmenu.css">
     <link rel="icon" href="imagen/logohsc.ico" type="image/x-icon">
     <style>
+        /* Estilos para el sidenav */
+        .sidenav {
+            height: 100%;
+            width: 250px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background-color: rgb(6, 60, 177); /* Fondo azul */
+            padding-top: 20px;
+            color: white;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .sidenav .logo {
+            width: 100%;
+            display: block;
+            margin: 0 auto;
+            border-radius: 8px;
+        }
+
+        .sidenav .user-info {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
+        }
+
+        .sidenav .user-info img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        .sidenav h3 {
+            color: white;
+            text-align: center;
+            margin-top: 20px;
+            font-size: 20px;
+        }
+
+        .sidenav a {
+            display: block;
+            padding: 10px;
+            color: white;
+            text-decoration: none;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+
+        .sidenav a:hover {
+            background-color: rgb(182, 10, 10); /* Rojo al pasar el mouse */
+            border-radius: 5px;
+        }
+
+        .sidenav hr {
+            border: 0;
+            border-top: 1px solid #bbb;
+            margin: 20px 0;
+        }
+
+        .main-content {
+            margin-left: 60px; /* Ajusta este valor si cambias el ancho del sidenav */
+            padding: 10px; /* Reduce el padding para acercar el contenido al menú */
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .page-title {
+            font-size: 28px;
+            color: #333;
+        }
+
         .search-container {
             display: flex;
             align-items: center;
@@ -56,7 +133,7 @@ $stmt->close();
 
         .table-container {
             width: 100%;
-            margin-left: auto;
+            margin: 0 auto;
             background: #ffffff;
             box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
             border-radius: 8px;
@@ -108,6 +185,14 @@ $stmt->close();
             background-color: rgb(6, 23, 177);
         }
 
+        .selector-container .excel-button {
+            background-color: rgb(0, 128, 0); /* Verde */
+        }
+
+        .selector-container .excel-button:hover {
+            background-color: rgb(100, 12, 0); /* Verde oscuro al pasar el mouse */
+        }
+
         table {
             width: 100%;
             border-collapse: collapse;
@@ -115,14 +200,11 @@ $stmt->close();
             font-size: 11px;
         }
 
-        table,
-        th,
-        td {
+        table, th, td {
             border: 2px solid #ddd;
         }
 
-        th,
-        td {
+        th, td {
             padding: 6px 8px;
             text-align: left;
         }
@@ -135,11 +217,11 @@ $stmt->close();
         td {
             word-wrap: break-word;
             max-width: 120px;
-            text-overflow: ellipsis;
+            white-space: nowrap;
             overflow: hidden;
+            text-overflow: ellipsis;
         }
 
-        /* Estilos para el modal */
         #passwordModal {
             display: none;
             position: fixed;
@@ -148,9 +230,7 @@ $stmt->close();
             width: 100%;
             height: 100%;
             background-color: rgba(0, 0, 0, 0.5);
-            /* Fondo semi-transparente */
             z-index: 9999;
-            /* Asegura que se muestre sobre otros elementos */
             display: flex;
             justify-content: center;
             align-items: center;
@@ -169,7 +249,6 @@ $stmt->close();
         h2 {
             margin-bottom: 20px;
             color: rgb(6, 60, 177);
-            /* Color personalizado para el título */
             font-size: 20px;
         }
 
@@ -182,41 +261,11 @@ $stmt->close();
             font-size: 16px;
             background-color: #f8f9fa;
             outline: none;
-            transition: border-color 0.3s;
+            transition: border-color 0.3s, all 0.3s ease-in-out;
         }
 
         input[type="password"]:focus {
             border-color: rgb(182, 10, 10);
-        }
-
-        button {
-            padding: 10px 20px;
-            border-radius: 5px;
-            border: none;
-            background-color: rgb(182, 10, 10);
-            color: white;
-            cursor: pointer;
-            font-size: 16px;
-            transition: background-color 0.3s;
-            width: auto;
-            /* Ajustar el tamaño del botón */
-            margin: 5px 0;
-        }
-
-        button:hover {
-            background-color: rgb(6, 23, 177);
-        }
-
-        button:focus {
-            outline: none;
-        }
-
-        button[type="button"] {
-            background-color: #ccc;
-        }
-
-        button[type="button"]:hover {
-            background-color: #999;
         }
 
         .pagination {
@@ -224,23 +273,21 @@ $stmt->close();
             justify-content: center;
             margin-top: 20px;
             padding: 10px 0;
-            /* Agrega padding para separar los botones de la tabla */
         }
 
         .pagination button {
-            padding: 5px 10px;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 14px;
             border: 1px solid #ddd;
             background-color: white;
             cursor: pointer;
             margin: 0 5px;
-            /* Asegura que los botones no estén demasiado pegados */
-            display: inline-block;
-            visibility: visible; /* Ensure buttons are visible */
         }
 
-        .pagination button.active {
-            background-color: rgb(182, 10, 10);
-            color: white;
+        .pagination button.disabled {
+            background-color: #f0f0f0;
+            cursor: not-allowed;
         }
     </style>
 </head>
@@ -257,24 +304,21 @@ $stmt->close();
         </div>
         <br>
         <hr>
+        <h3>MENU</h3>
         <br>
-        <h3>Administracion de Usuarios</h3>
-        <br>
-        <a href="#" onclick="openPasswordModal()">Usuarios</a> <!-- Nueva opción para usuarios con modal -->
-        <a href="registrar_funcionario.php">Registrar Funcionario</a> <!-- Nueva opción para registrar funcionario -->
-        <br>
-        <hr>
-        <br>
+        <a href="#" onclick="openPasswordModal()">Usuarios</a>
+        <a href="registrar_funcionario.php">Registrar Funcionario</a>
+        <a href="ver_formularios_calidad.php">Ver Formularios</a>
         <a href="cerrarsesion.php">Cerrar sesión</a>
         <br>
         <br>
     </div>
-    <br>
+
     <!-- CONTENEDOR PRINCIPAL -->
     <div class="main-content">
         <br>
         <div class="header-container">
-            <h1 class="page-title">Menu Admin</h1>
+            <h1 class="page-title">Dashboard de Admin </h1>
         </div>
         <hr>
         <br>
@@ -293,18 +337,14 @@ $stmt->close();
                 <option value="formulario_turnos_uti_tens">Turnos UTI Tens</option>
                 <option value="formulario_turnos_im_tecnologos_medicos">Turnos Imagenologia TM</option>
             </select>
-            <!-- barra busqueda -->
-            <div class="search-container">
-                <input type="text" id="searchInput" placeholder="Buscar en la tabla..." onkeyup="filtrartablasadmin()">
-            </div>
         </div>
         <div class="selector-container">
             <button onclick="loadTable()">Cargar Tabla</button>
-            <br>
             <button onclick="eliminartabla()">Eliminar Vista de la Tabla</button>
+            <button onclick="location.reload();">Actualizar Página</button>
             <form action="generar_excel.php" method="post" style="display: inline;">
                 <input type="hidden" name="table" id="selectedTable">
-                <button type="submit">Generar Excel</button>
+                <button type="submit" class="excel-button">Generar Excel</button>
             </form>
         </div>
         <div id="successMessage" style="display: none; padding: 10px; background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; border-radius: 5px; margin-top: 10px;">
@@ -321,12 +361,14 @@ $stmt->close();
                 </tbody>
             </table>
         </div>
-        <div class="pagination" id="pagination"></div>
+        <div class="pagination" id="pagination" style="display: none;">
+            <button id="prevButton" onclick="previousPage()">Anterior</button>
+            <button id="nextButton" onclick="nextPage()">Siguiente</button>
+        </div>
     </div>
 
     <!-- MODAL PARA CONTRASEÑA -->
     <div id="passwordModal" style="display: none;">
-        <!-- Asegúrate de que el display inicial sea none -->
         <div class="modal-content">
             <h2>Ingrese Contraseña</h2>
             <form id="passwordForm" onsubmit="return validatePassword()">
@@ -343,21 +385,22 @@ $stmt->close();
     <script>
         let currentPage = 1;
         const rowsPerPage = 10;
+        let totalPages = 0;
 
         function loadTable() {
             const tableSelector = document.getElementById('tableSelector').value;
             const tableHeader = document.getElementById('tableHeader');
             const tableBody = document.getElementById('tableBody');
             const successMessage = document.getElementById('successMessage');
+            const pagination = document.getElementById('pagination');
             document.getElementById('selectedTable').value = tableSelector;
 
-            fetch('cargar_tabla.php?table=' + tableSelector)
+            fetch(`cargar_tabla_admin.php?table=${tableSelector}&page=${currentPage}&rowsPerPage=${rowsPerPage}`)
                 .then(response => response.json())
                 .then(data => {
                     tableHeader.innerHTML = '';
                     tableBody.innerHTML = '';
-                    currentPage = 1; // Reinicia la página a 1 cada vez que se carga una nueva tabla
-
+                    
                     if (data.columns.length > 0) {
                         data.columns.forEach(column => {
                             const th = document.createElement('th');
@@ -377,16 +420,17 @@ $stmt->close();
                             tableBody.appendChild(tr);
                         });
 
-                        // Mostrar mensaje de éxito
                         successMessage.style.display = "block";
 
-                        // Ocultar el mensaje después de 3 segundos
                         setTimeout(() => {
                             successMessage.style.display = "none";
                         }, 3000);
 
-                        // Actualizar paginación
-                        updatePagination(); // Asegúrate de actualizar la paginación
+                        totalPages = data.totalPages;
+                        pagination.style.display = 'flex';
+                        updatePaginationButtons();
+                    } else {
+                        pagination.style.display = 'none';
                     }
                 })
                 .catch(error => {
@@ -394,44 +438,50 @@ $stmt->close();
                 });
         }
 
-        function updatePagination() {
-            const tableBody = document.getElementById('tableBody');
-            const rows = tableBody.getElementsByTagName('tr');
-            const totalPages = Math.ceil(rows.length / rowsPerPage);
-            const pagination = document.getElementById('pagination');
-
-            pagination.innerHTML = ''; // Limpia los botones de paginación anteriores
-
-            for (let i = 1; i <= totalPages; i++) {
-                const button = document.createElement('button');
-                button.textContent = i;
-                if (i === currentPage) {
-                    button.classList.add('active');
-                }
-                button.addEventListener('click', () => {
-                    currentPage = i;
-                    displayRows(); // Muestra las filas de la página seleccionada
-                    updatePagination(); // Asegúrate de actualizar los botones activos
-                });
-                pagination.appendChild(button);
+        function previousPage() {
+            if (currentPage > 1) {
+                currentPage--;
+                loadTable();
             }
-
-            displayRows(); // Muestra las filas de la página actual
         }
 
-        function displayRows() {
+        function nextPage() {
+            if (currentPage < totalPages) {
+                currentPage++;
+                loadTable();
+            }
+        }
+
+        function updatePaginationButtons() {
+            const prevButton = document.getElementById('prevButton');
+            const nextButton = document.getElementById('nextButton');
+
+            prevButton.classList.toggle('disabled', currentPage === 1);
+            nextButton.classList.toggle('disabled', currentPage === totalPages);
+        }
+
+        function filtrartablasadmin() {
+            const searchInput = document.getElementById('searchInput').value.toLowerCase();
             const tableBody = document.getElementById('tableBody');
             const rows = tableBody.getElementsByTagName('tr');
-            const start = (currentPage - 1) * rowsPerPage;
-            const end = start + rowsPerPage;
 
             for (let i = 0; i < rows.length; i++) {
-                if (i >= start && i < end) {
-                    rows[i].style.display = '';
-                } else {
-                    rows[i].style.display = 'none';
+                const cells = rows[i].getElementsByTagName('td');
+                let match = false;
+                for (let j = 0; j < cells.length; j++) {
+                    if (cells[j].textContent.toLowerCase().indexOf(searchInput) > -1) {
+                        match = true;
+                        break;
+                    }
                 }
+                rows[i].style.display = match ? '' : 'none';
             }
+        }
+
+        function eliminartabla() {
+            const tableBody = document.getElementById('tableBody');
+            tableBody.innerHTML = '';
+            document.getElementById('pagination').style.display = 'none';
         }
 
         function openPasswordModal() {
@@ -445,16 +495,14 @@ $stmt->close();
         function validatePassword() {
             const password = document.getElementById('password').value;
 
-            // Aquí puedes realizar la validación de la contraseña
-            if (password === '1234') { // Reemplaza '1234' por la contraseña real
+            if (password === '1234') { 
                 window.location.href = 'usuarios.php';
-                return false; // Evita el submit tradicional
+                return false;
             } else {
                 alert('Contraseña incorrecta');
-                return false; // Evita el submit tradicional
+                return false;
             }
         }
     </script>
 </body>
-
 </html>

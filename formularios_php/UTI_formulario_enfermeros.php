@@ -55,7 +55,7 @@ if (!$result) {
         <br><br><br>
         <h2 align="center">Entrega De Turno Enfermeros UTI</h2>
         <p align="center">Hospital Santa Cruz</p>
-        <form action="guardar_turno_enfermeros.php" method="POST">
+        <form action="guardar_turno_uti_enfermeros.php" method="POST">
             <br>
             <!--FECHA Y TURNO-->
             <div class="row">

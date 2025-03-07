@@ -139,8 +139,7 @@ $stmt->close();
         </div>
         <br>
         <hr>
-        <br>
-        <h3>Calidad</h3>
+        <h3>Menu Calidad</h3>
         <br>
 
         <a href="ver_formularios_calidad.php">Ver Formularios</a>

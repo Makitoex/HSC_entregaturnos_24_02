@@ -48,7 +48,7 @@ if (!$result) {
         <h2 class="text-center">Entrega De Turno TENS UTI</h2>
         <p class="text-center">Hospital Santa Cruz</p>
         <br>
-        <form action="guardar_turno_tens.php" method="POST">
+        <form action="guardar_turno_uti_tens.php" method="POST">
             <!-- FECHA Y TURNO -->
             <div class="row mb-3">
                 <div class="col-md-2">

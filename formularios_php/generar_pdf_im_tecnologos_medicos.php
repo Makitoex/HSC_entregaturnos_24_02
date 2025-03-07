@@ -70,7 +70,7 @@ $pdf = new PDF();
 $pdf->AddPage();
 $pdf->SetFillColor(200, 220, 255);
 
-$pdf->SectionTitle('Información General');
+$pdf->SectionTitle('Informacion General');
 $pdf->TableCell('Fecha', $row['fecha']);
 $pdf->TableCell('Tipo de Turno', $row['tipoturno']);
 
@@ -78,23 +78,23 @@ $pdf->SectionTitle('Funcionarios');
 $pdf->TableCell('Saliente', $row['funcionario_saliente_1']);
 $pdf->TableCell('Entrante', $row['funcionario_entrante_1']);
 
-$pdf->SectionTitle('Exámenes Pendientes');
+$pdf->SectionTitle('Examenes Pendientes');
 $pdf->TableCell('RX', $row['rx_pendientes']);
 $pdf->TableCell('TC', $row['tc_pendientes']);
-$pdf->TableCell('Portátil', $row['portatil_pendientes']);
+$pdf->TableCell('Portatil', $row['portatil_pendientes']);
 
 $pdf->SectionTitle('Equipos Operativos');
 $pdf->TableCell('RX', $row['rx_equiposoperativos']);
 $pdf->TableCell('TC', $row['tc_equiposoperativos']);
-$pdf->TableCell('Portátil', $row['portatil_equiposoperativos']);
+$pdf->TableCell('Portatil', $row['portatil_equiposoperativos']);
 
-$pdf->SectionTitle('Exámenes Enviados');
+$pdf->SectionTitle('Examenes Enviados');
 $pdf->TableCell('PACS', $row['pacs_enviados']);
 $pdf->TableCell('Prueba', $row['prueba_enviados']);
 $pdf->TableCell('Syngovia', $row['syngovia_enviados']);
 
 $pdf->SectionTitle('Carro de Paros');
-$pdf->TableCell('Código', $row['codigo_carroparos']);
+$pdf->TableCell('Codigo', $row['codigo_carroparos']);
 $pdf->TableCell('Abierto', $row['carrodeparos']);
 $pdf->MultiCellRow('Detalles', $row['carroutilizado']);
 

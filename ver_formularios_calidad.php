@@ -180,7 +180,7 @@ include 'navbar_calidad.php';
             <select id="tableSelector" class="custom-select">
                 <option value="">--Seleccione--</option>
                 <?php foreach ($tablas as $tabla) { ?>
-                    <option value="<?php echo $tabla; ?>"><?php echo str_replace('_', ' ', ucwords($tabla)); ?></option>
+                    <option value="<?= $tabla ?>"><?= ucwords(str_replace('_', ' ', $tabla)) ?></option>
                 <?php } ?>
             </select>
             <button class="btn btn-primary" onclick="loadTable()">Cargar Tabla</button>
@@ -213,7 +213,7 @@ include 'navbar_calidad.php';
         let currentPage = 1;
         const rowsPerPage = 10;
 
-        function loadTable() {
+        function loadTable(page = 1) {
             const tableSelector = document.getElementById('tableSelector').value;
             const searchText = document.getElementById('searchText').value;
             const startDate = document.getElementById('startDate').value;
@@ -233,12 +233,17 @@ include 'navbar_calidad.php';
 
             if (tableSelector === "") return;
 
-            fetch(`cargar_tabla.php?table=${tableSelector}&search=${searchText}&startDate=${startDate}&endDate=${endDate}`)
-                .then(response => response.json())
+            fetch(`cargar_tabla_calidad.php?table=${tableSelector}&search=${searchText}&startDate=${startDate}&endDate=${endDate}&page=${page}&rowsPerPage=${rowsPerPage}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Error al cargar la tabla');
+                    }
+                    return response.json();
+                })
                 .then(data => {
                     tableHeader.innerHTML = '';
                     tableBody.innerHTML = '';
-                    currentPage = 1;
+                    currentPage = page;
 
                     if (data.columns.length > 0) {
                         data.columns.forEach(column => {
@@ -249,7 +254,7 @@ include 'navbar_calidad.php';
                     }
 
                     if (data.rows.length > 0) {
-                        data.rows.forEach((row, index) => {
+                        data.rows.forEach((row) => {
                             const tr = document.createElement('tr');
                             row.forEach(cell => {
                                 const td = document.createElement('td');
@@ -262,7 +267,7 @@ include 'navbar_calidad.php';
                             const generatePdfButton = document.createElement('button');
                             generatePdfButton.textContent = "Generar PDF";
                             generatePdfButton.classList.add('btn', 'btn-outline-primary');
-                            generatePdfButton.onclick = function() {
+                            generatePdfButton.onclick = function () {
                                 generarPdf(row, data.columns, tableSelector);
                             };
                             td.appendChild(generatePdfButton);
@@ -271,7 +276,9 @@ include 'navbar_calidad.php';
                             tableBody.appendChild(tr);
                         });
 
-                        updatePagination();
+                        updatePagination(data.totalRows);
+                    } else {
+                        tableBody.innerHTML = '<tr><td colspan="100%" class="text-center">No se encontraron registros.</td></tr>';
                     }
                 })
                 .catch(error => {
@@ -279,47 +286,80 @@ include 'navbar_calidad.php';
                 });
         }
 
-        function updatePagination() {
-            const tableBody = document.getElementById('tableBody');
-            const rows = tableBody.getElementsByTagName('tr');
-            const totalPages = Math.ceil(rows.length / rowsPerPage);
+        function updatePagination(totalRows) {
+            const totalPages = Math.ceil(totalRows / rowsPerPage);
             const pagination = document.getElementById('pagination');
 
             pagination.innerHTML = '';
 
-            for (let i = 1; i <= totalPages; i++) {
+            const prevButton = document.createElement('button');
+            prevButton.textContent = 'Anterior';
+            prevButton.classList.add('btn', 'btn-light');
+            prevButton.disabled = currentPage === 1;
+            prevButton.addEventListener('click', () => {
+                if (currentPage > 1) {
+                    loadTable(currentPage - 1);
+                }
+            });
+            pagination.appendChild(prevButton);
+
+            const firstPageButton = document.createElement('button');
+            firstPageButton.textContent = '1';
+            firstPageButton.classList.add('btn', 'btn-light');
+            if (currentPage === 1) {
+                firstPageButton.classList.add('active');
+            }
+            firstPageButton.addEventListener('click', () => {
+                loadTable(1);
+            });
+            pagination.appendChild(firstPageButton);
+
+            if (currentPage > 3) {
+                const dots = document.createElement('span');
+                dots.textContent = '...';
+                pagination.appendChild(dots);
+            }
+
+            for (let i = Math.max(2, currentPage - 1); i <= Math.min(totalPages - 1, currentPage + 1); i++) {
                 const button = document.createElement('button');
                 button.textContent = i;
                 button.classList.add('btn', 'btn-light');
-
                 if (i === currentPage) {
                     button.classList.add('active');
                 }
-
                 button.addEventListener('click', () => {
-                    currentPage = i;
-                    displayRows();
-                    updatePagination();
+                    loadTable(i);
                 });
                 pagination.appendChild(button);
             }
 
-            displayRows();
-        }
-
-        function displayRows() {
-            const tableBody = document.getElementById('tableBody');
-            const rows = tableBody.getElementsByTagName('tr');
-            const start = (currentPage - 1) * rowsPerPage;
-            const end = start + rowsPerPage;
-
-            for (let i = 0; i < rows.length; i++) {
-                if (i >= start && i < end) {
-                    rows[i].style.display = '';
-                } else {
-                    rows[i].style.display = 'none';
-                }
+            if (currentPage < totalPages - 2) {
+                const dots = document.createElement('span');
+                dots.textContent = '...';
+                pagination.appendChild(dots);
             }
+
+            const lastPageButton = document.createElement('button');
+            lastPageButton.textContent = totalPages;
+            lastPageButton.classList.add('btn', 'btn-light');
+            if (currentPage === totalPages) {
+                lastPageButton.classList.add('active');
+            }
+            lastPageButton.addEventListener('click', () => {
+                loadTable(totalPages);
+            });
+            pagination.appendChild(lastPageButton);
+
+            const nextButton = document.createElement('button');
+            nextButton.textContent = 'Siguiente';
+            nextButton.classList.add('btn', 'btn-light');
+            nextButton.disabled = currentPage === totalPages;
+            nextButton.addEventListener('click', () => {
+                if (currentPage < totalPages) {
+                    loadTable(currentPage + 1);
+                }
+            });
+            pagination.appendChild(nextButton);
         }
 
         function generarPdf(rowData, columns, tableName) {
@@ -336,7 +376,7 @@ include 'navbar_calidad.php';
                 })
                 .then(response => {
                     if (!response.ok) {
-                        throw new Error('Error en la respuesta del servidor');
+                        throw new Error('Error al generar el PDF');
                     }
                     return response.blob();
                 })
