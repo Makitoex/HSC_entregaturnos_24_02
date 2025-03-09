@@ -31,7 +31,7 @@ if (!$result) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/css/hojadeestilos.css">
-    <title>Entrega de Turno UCI</title>
+    <title>Entrega de Turno UCI EU</title>
 
     <!-- ICONO DE PAGINA -->
     <link rel="icon" href="imagen/logohsc.ico" type="image/x-icon">
