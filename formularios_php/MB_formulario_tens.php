@@ -16,7 +16,7 @@ mysqli_set_charset($conn, "utf8mb4");
 
 $fecha_actual = date("Y-m-d");
 
-// Consulta para obtener los funcionarios de UCI
+// Consulta para obtener los funcionarios de Microbiologia
 $sql = "SELECT id_funcionarios, id_profesion, nombre_funcionarios, rut_funcionarios, pin_funcionarios FROM funcionarios_microbiologia WHERE id_servicio = 9 ORDER BY id_funcionarios";
 $result = mysqli_query($conn, $sql);
 
@@ -62,91 +62,91 @@ if (!$result) {
             <form id="formsalasyrx">
                 <div class="row">
                     <div class="mb-3">
-                        <label for="novedades">Pendientes Quimica y Hormonas:</label>
-                        <textarea id="novedades" name="novedades" rows="2" class="form-control" placeholder="Deje su comentario..."></textarea>
+                        <label for="pendientes_quimica">Pendientes Quimica y Hormonas:</label>
+                        <textarea id="pendientes_quimica" name="pendientes_quimica" rows="2" class="form-control" placeholder="Deje su comentario..."></textarea>
                     </div>
                     <div class="mb-3">
-                        <label for="novedades">Pendientes Hematologia:</label>
-                        <textarea id="novedades" name="novedades" rows="2" class="form-control" placeholder="Deje su comentario..."></textarea>
+                        <label for="pendientes_hematologia">Pendientes Hematologia:</label>
+                        <textarea id="pendientes_hematologia" name="pendientes_hematologia" rows="2" class="form-control" placeholder="Deje su comentario..."></textarea>
                     </div>
                     <div class="mb-3">
-                        <label for="novedades">Pendientes Microbiologia:</label>
-                        <textarea id="novedades" name="novedades" rows="2" class="form-control" placeholder="Deje su comentario..."></textarea>
+                        <label for="pendientes_microbiologia">Pendientes Microbiologia:</label>
+                        <textarea id="pendientes_microbiologia" name="pendientes_microbiologia" rows="2" class="form-control" placeholder="Deje su comentario..."></textarea>
                     </div>
                     <div class="mb-3">
-                        <label for="novedades">Pendientes Serologia y Hormonas:</label>
-                        <textarea id="novedades" name="novedades" rows="2" class="form-control" placeholder="Deje su comentario..."></textarea>
+                        <label for="pendientes_serologia">Pendientes Serologia y Hormonas:</label>
+                        <textarea id="pendientes_serologia" name="pendientes_serologia" rows="2" class="form-control" placeholder="Deje su comentario..."></textarea>
                     </div>
                     <div class="mb-3">
-                        <label for="novedades">Recepcion de muestras para derivacion:</label>
-                        <textarea id="novedades" name="novedades" rows="2" class="form-control" placeholder="Deje su comentario..."></textarea>
+                        <label for="pendientes_recepcion_muestras">Recepcion de muestras para derivacion:</label>
+                        <textarea id="pendientes_recepcion_muestras" name="pendientes_recepcion_muestras" rows="2" class="form-control" placeholder="Deje su comentario..."></textarea>
                     </div>
                     <hr>
                     <h6 align="left">Tareas a realizar:</h6>
                     <br><br>
                     <div class="col-md-4">
-                        <label for="tipoturno">Hoja de trabajo Microbiologia:</label>
-                        <select id="tipoturno" name="tipoturno" class="form-select form-select-sm" required>
-                            <option value="turno_largo">No realizado</option>
-                            <option value="turno_noche">Realizado</option>
+                        <label for="tarea_hoja_trabajo">Hoja de trabajo Microbiologia:</label>
+                        <select id="tarea_hoja_trabajo" name="tarea_hoja_trabajo" class="form-select form-select-sm" required>
+                            <option value="no_realizado">No realizado</option>
+                            <option value="si_realizado">Realizado</option>
                         </select>
                     </div>
                     <div class="col-md-4">
-                        <label for="tipoturno">Preparacion Cloro:</label>
-                        <select id="tipoturno" name="tipoturno" class="form-select form-select-sm" required>
-                            <option value="turno_largo">No realizado</option>
-                            <option value="turno_noche">Realizado</option>
+                        <label for="tarea_preparacion_cloro">Preparacion Cloro:</label>
+                        <select id="tarea_preparacion_cloro" name="tarea_preparacion_cloro" class="form-select form-select-sm" required>
+                            <option value="no_realizado">No realizado</option>
+                            <option value="si_realizado">Realizado</option>
                         </select>
                     </div>
                     <div class="col-md-4">
-                        <label for="tipoturno">Registro de temperaturas:</label>
-                        <select id="tipoturno" name="tipoturno" class="form-select form-select-sm" required>
-                            <option value="turno_largo">No realizado</option>
-                            <option value="turno_noche">Realizado</option>
+                        <label for="tarea_registro_temperaturas">Registro de temperaturas:</label>
+                        <select id="tarea_registro_temperaturas" name="tarea_registro_temperaturas" class="form-select form-select-sm" required>
+                            <option value="no_realizado">No realizado</option>
+                            <option value="si_realizado">Realizado</option>
                         </select>
                     </div>
                     <br><br><br>
                     <div class="mb-3">
-                        <label for="novedades">Otras Observaciones:</label>
-                        <textarea id="novedades" name="novedades" rows="2" class="form-control" placeholder="Deje su comentario..."></textarea>
+                        <label for="otras_observaciones">Otras Observaciones:</label>
+                        <textarea id="otras_observaciones" name="otras_observaciones" rows="2" class="form-control" placeholder="Deje sus observaciones..."></textarea>
                     </div>
                     <hr>
                     <h6 align="left">Limpieza y orden secciones:</h6>
                     <br><br>
                     <div class="row">
                         <div class="col-md-4 mb-3">
-                            <label for="quimica">Quimica:</label>
-                            <select id="quimica" name="quimica" class="form-select form-select-sm" required>
+                            <label for="limpieza_quimica">Quimica:</label>
+                            <select id="limpieza_quimica" name="limpieza_quimica" class="form-select form-select-sm" required>
                                 <option value="no_realizado">No realizado</option>
-                                <option value="realizado">Realizado</option>
+                                <option value="si_realizado">Realizado</option>
                             </select>
                         </div>
                         <div class="col-md-4 mb-3">
-                            <label for="hermatologia">Hermatologia:</label>
-                            <select id="hermatologia" name="hermatologia" class="form-select form-select-sm" required>
+                            <label for="limpieza_hematologia">Hermatologia:</label>
+                            <select id="limpieza_hematologia" name="limpieza_hematologia" class="form-select form-select-sm" required>
                                 <option value="no_realizado">No realizado</option>
-                                <option value="realizado">Realizado</option>
+                                <option value="si_realizado">Realizado</option>
                             </select>
                         </div>
                         <div class="col-md-4 mb-3">
-                            <label for="orina">Orina:</label>
-                            <select id="orina" name="orina" class="form-select form-select-sm" required>
+                            <label for="limpieza_orina">Orina:</label>
+                            <select id="limpieza_orina" name="limpieza_orina" class="form-select form-select-sm" required>
                                 <option value="no_realizado">No realizado</option>
-                                <option value="realizado">Realizado</option>
+                                <option value="si_realizado">Realizado</option>
                             </select>
                         </div>
                         <div class="col-md-4 mb-3">
-                            <label for="microbiologia">Microbiologia:</label>
-                            <select id="microbiologia" name="microbiologia" class="form-select form-select-sm" required>
+                            <label for="limpieza_microbiologia">Microbiologia:</label>
+                            <select id="limpieza_microbiologia" name="limpieza_microbiologia" class="form-select form-select-sm" required>
                                 <option value="no_realizado">No realizado</option>
-                                <option value="realizado">Realizado</option>
+                                <option value="si_realizado">Realizado</option>
                             </select>
                         </div>
                         <div class="col-md-4 mb-3">
-                            <label for="covid">COVID:</label>
-                            <select id="covid" name="covid" class="form-select form-select-sm" required>
+                            <label for="limpieza_covid">COVID:</label>
+                            <select id="limpieza_covid" name="limpieza_covid" class="form-select form-select-sm" required>
                                 <option value="no_realizado">No realizado</option>
-                                <option value="realizado">Realizado</option>
+                                <option value="si_realizado">Realizado</option>
                             </select>
                         </div>
                     </div>
@@ -182,7 +182,7 @@ if (!$result) {
                     </select>
                     <input type="hidden" id="nombre_funcionario_saliente_1" name="nombre_funcionario_saliente_1">
                     <input type="hidden" id="pin_funcionario_saliente_1" name="pin_funcionario_saliente_1">
-                    <input type="password" id="contrasena_saliente_1" name="contrasena_saliente_1" placeholder="Ingrese Contraseña Kine.1" required class="form-control form-control-sm mt-2">
+                    <input type="password" id="contrasena_saliente_1" name="contrasena_saliente_1" placeholder="Ingrese Contraseña" required class="form-control form-control-sm mt-2">
                 </div>
 
                 <!-- TENS MB Entrante 1 -->
@@ -201,7 +201,7 @@ if (!$result) {
                                 echo "<option value='$id_funcionarios' data-nombre='$nombre_funcionarios' data-pin='$pin_funcionarios'>$nombre_funcionarios - $rut_funcionarios</option>";
                             }
                         } else {
-                            echo "<option value=''>No hay Kine disponibles</option>";
+                            echo "<option value=''>No hay disponibles</option>";
                         }
                         ?>
                     </select>
@@ -227,7 +227,7 @@ if (!$result) {
             var pinFuncionario = selectedOption.getAttribute('data-pin');
 
             document.getElementById(nombreId).value = nombreFuncionario;
-            document.getElementId(pinId).value = pinFuncionario;
+            document.getElementById(pinId).value = pinFuncionario;
         }
 
         function validarYEnviar(event) {

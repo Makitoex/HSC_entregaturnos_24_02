@@ -171,7 +171,7 @@ if (stripos($nombre_servicio, "uti_tens") !== false) {
 } elseif (stripos($nombre_servicio, "mb_microbiologia_tens") !== false) { // Ajuste aquí
     $tabla = "formulario_turnos_mb_tens";
     $query = "SELECT 
-                tm.id,  -- Corregido el alias y la columna 'id' de la tabla 'tm'
+                tm.id, 
                 tm.fecha,
                 fs1.nombre_funcionarios AS funcionario_saliente_1,
                 fe1.nombre_funcionarios AS funcionario_entrante_1,
@@ -375,9 +375,7 @@ $result = $stmt->get_result();
                         // Lógica para mostrar los funcionarios salientes según el servicio
                         if (stripos($nombre_servicio, "mb_microbiologia_tens") !== false) {
                             // Si es servicio de microbiología
-                            echo htmlspecialchars($row['funcionario_saliente_1'] ?? 'N/A') . ", " .
-                                 htmlspecialchars($row['funcionario_saliente_2'] ?? 'N/A') . ", " .
-                                 htmlspecialchars($row['funcionario_saliente_3'] ?? 'N/A');
+                            echo htmlspecialchars($row['funcionario_saliente_1'] ?? 'N/A') ;
                         } elseif (stripos($nombre_servicio, "uci_enfermeros") !== false) {
                             echo htmlspecialchars($row['funcionario_saliente_1'] ?? 'N/A') . ", " .
                                  htmlspecialchars($row['funcionario_saliente_2'] ?? 'N/A');
@@ -398,9 +396,7 @@ $result = $stmt->get_result();
                         // Lógica para mostrar los funcionarios entrantes según el servicio
                         if (stripos($nombre_servicio, "mb_microbiologia_tens") !== false) {
                             // Si es servicio de microbiología
-                            echo htmlspecialchars($row['funcionario_entrante_1'] ?? 'N/A') . ", " .
-                                 htmlspecialchars($row['funcionario_entrante_2'] ?? 'N/A') . ", " .
-                                 htmlspecialchars($row['funcionario_entrante_3'] ?? 'N/A');
+                            echo htmlspecialchars($row['funcionario_entrante_1'] ?? 'N/A');
                         } elseif (stripos($nombre_servicio, "uci_enfermeros") !== false) {
                             echo htmlspecialchars($row['funcionario_entrante_1'] ?? 'N/A') . ", " .
                                  htmlspecialchars($row['funcionario_entrante_2'] ?? 'N/A');

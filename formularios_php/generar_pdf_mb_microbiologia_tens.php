@@ -32,8 +32,8 @@ $sql = "SELECT
             fs1.nombre_funcionarios AS funcionario_saliente_1,
             fe1.nombre_funcionarios AS funcionario_entrante_1
         FROM formulario_turnos_mb_tens t
-        LEFT JOIN funcionarios_uci fs1 ON t.funcionario_saliente_1 = fs1.id_funcionarios
-        LEFT JOIN funcionarios_uci fe1 ON t.funcionario_entrante_1 = fe1.id_funcionarios
+        LEFT JOIN funcionarios_microbiologia fs1 ON t.funcionario_saliente_1 = fs1.id_funcionarios
+        LEFT JOIN funcionarios_microbiologia fe1 ON t.funcionario_entrante_1 = fe1.id_funcionarios
         WHERE t.id = ?";
 
 $stmt = $conn->prepare($sql);
@@ -45,6 +45,9 @@ $row = $result->fetch_assoc();
 if (!$row) {
     die("No se encontró el formulario.");
 }
+
+// DEBUG: Log the fetched data
+error_log(print_r($row, true));
 
 // CLASE PARA EL PDF
 class PDF extends FPDF {
@@ -118,4 +121,4 @@ $pdf->Output('I', 'formulario_' . $id_formulario . '.pdf');
 // CERRAR CONEXIÓN
 $stmt->close();
 $conn->close();
-?>
+?> 

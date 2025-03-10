@@ -16,11 +16,11 @@ if ($mysqli->connect_error) {
 // Verificar si las variables $_POST están definidas antes de usarlas
 $fecha = isset($_POST['fecha']) ? $_POST['fecha'] : null;
 $tipoturno = isset($_POST['tipoturno']) ? $_POST['tipoturno'] : null;
-$pendientes_quimica = isset($_POST['novedades_quimica']) ? $_POST['novedades_quimica'] : null;
-$pendientes_hematologia = isset($_POST['novedades_hematologia']) ? $_POST['novedades_hematologia'] : null;
-$pendientes_microbiologia = isset($_POST['novedades_microbiologia']) ? $_POST['novedades_microbiologia'] : null;
-$pendientes_serologia = isset($_POST['novedades_serologia']) ? $_POST['novedades_serologia'] : null;
-$pendientes_recepcion_muestras = isset($_POST['novedades_recepcion_muestras']) ? $_POST['novedades_recepcion_muestras'] : null;
+$pendientes_quimica = isset($_POST['pendientes_quimica']) ? $_POST['pendientes_quimica'] : null;
+$pendientes_hematologia = isset($_POST['pendientes_hematologia']) ? $_POST['pendientes_hematologia'] : null;
+$pendientes_microbiologia = isset($_POST['pendientes_microbiologia']) ? $_POST['pendientes_microbiologia'] : null;
+$pendientes_serologia = isset($_POST['pendientes_serologia']) ? $_POST['pendientes_serologia'] : null;
+$pendientes_recepcion_muestras = isset($_POST['pendientes_recepcion_muestras']) ? $_POST['pendientes_recepcion_muestras'] : null;
 $tarea_hoja_trabajo = isset($_POST['tarea_hoja_trabajo']) ? $_POST['tarea_hoja_trabajo'] : null;
 $tarea_preparacion_cloro = isset($_POST['tarea_preparacion_cloro']) ? $_POST['tarea_preparacion_cloro'] : null;
 $tarea_registro_temperaturas = isset($_POST['tarea_registro_temperaturas']) ? $_POST['tarea_registro_temperaturas'] : null;
@@ -70,7 +70,7 @@ if ($stmt->execute()) {
 
     if ($id_formulario > 0) {
         // Redirigir al PHP que genera el PDF 
-        header("Location: generar_pdf_microbiologia.php?id=" . $id_formulario);
+        header("Location: generar_pdf_mb_microbiologia_tens.php?id=" . $id_formulario);
         exit();
     } else {
         die("Error: No se pudo obtener el ID del formulario.");
