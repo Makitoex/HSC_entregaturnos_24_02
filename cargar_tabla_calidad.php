@@ -2,38 +2,36 @@
 include 'conexion.php';
 
 $table = $_GET['table'];
-$search = $_GET['search'];
-$startDate = $_GET['startDate'];
-$endDate = $_GET['endDate'];
+$search = $_GET['search'] ?? '';
+$startDate = $_GET['startDate'] ?? '';
+$endDate = $_GET['endDate'] ?? '';
 $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
 $rowsPerPage = isset($_GET['rowsPerPage']) ? (int)$_GET['rowsPerPage'] : 10;
 $offset = ($page - 1) * $rowsPerPage;
 
-// Construir la consulta SQL con paginación
-$query = "SELECT * FROM $table WHERE 1=1";
-
-if ($search) {
-    $query .= " AND (column1 LIKE '%$search%' OR column2 LIKE '%$search%' ...)"; // Añade aquí las columnas a buscar
+$conditions = [];
+if (!empty($search)) {
+    $conditions[] = "(column1 LIKE '%" . $search . "%' OR column2 LIKE '%" . $search . "%' ...)"; // Añade aquí las columnas a buscar
+}
+if (!empty($startDate)) {
+    $conditions[] = "fecha >= '$startDate'"; // Ajusta 'date_column' según tu base de datos
+}
+if (!empty($endDate)) {
+    $conditions[] = "fecha <= '$endDate'"; // Ajusta 'date_column' según tu base de datos
 }
 
-if ($startDate && $endDate) {
-    $query .= " AND date_column BETWEEN '$startDate' AND '$endDate'"; // Ajusta 'date_column' según tu base de datos
+$whereClause = '';
+if (count($conditions) > 0) {
+    $whereClause = 'WHERE ' . implode(' AND ', $conditions);
 }
 
-$query .= " LIMIT $offset, $rowsPerPage";
+// Añadir cláusula ORDER BY para ordenar por la columna de fecha en orden descendente
+$query = "SELECT * FROM $table $whereClause ORDER BY fecha DESC LIMIT $offset, $rowsPerPage"; // Ajusta 'date_column' según tu base de datos
 
 $result = $conn->query($query);
 
 // Obtener el total de registros
-$totalQuery = "SELECT COUNT(*) as total FROM $table WHERE 1=1";
-
-if ($search) {
-    $totalQuery .= " AND (column1 LIKE '%$search%' OR column2 LIKE '%$search%' ...)"; // Añade aquí las columnas a buscar
-}
-
-if ($startDate && $endDate) {
-    $totalQuery .= " AND date_column BETWEEN '$startDate' AND '$endDate'"; // Ajusta 'date_column' según tu base de datos
-}
+$totalQuery = "SELECT COUNT(*) as total FROM $table $whereClause";
 
 $totalResult = $conn->query($totalQuery);
 $totalRows = $totalResult->fetch_assoc()['total'];
@@ -54,4 +52,6 @@ echo json_encode([
     'rows' => $rows,
     'totalRows' => $totalRows,
 ]);
+
+$conn->close();
 ?>
