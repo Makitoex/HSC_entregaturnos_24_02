@@ -57,16 +57,10 @@ if (!$result) {
         </div>
 
         <form id="formulario_noche" action="guardar_turno_mb_tecnologos.php" method="POST" style="display: none;">
-            <!-- Formulario para Turno Largo -->
+            <!-- Formulario para Turno NOCHE -->
             <h5>Formulario Turno Noche</h5>
-            <head>
-                <meta charset="UTF-8">
-                <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                <title>Entrega de Turno Noche</title>
-                <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-                <link rel="icon" href="imagen/logohsc.ico" type="image/x-icon">
-            </head>
-
+            <input type="hidden" id="fecha_input_noche" name="fecha" />
+            <input type="hidden" id="tipoturno_input_noche" name="tipoturno" />
             <body>
                 <h5>1.- Equipos y Sistema Informático</h5>
                 <div class="mb-3">
@@ -174,7 +168,6 @@ if (!$result) {
                 <br>
                 <h4 class="text-center">Entrega de Turnos:</h4>
                 <br>
-                <br>
                 <div class="row">
                     <!-- TM Entrega -->
                     <div class="col-md-6 mb-3">
@@ -224,99 +217,98 @@ if (!$result) {
                         <input type="hidden" id="pin_funcionario_entrante_1" name="pin_funcionario_entrante_1">
                     </div>
                 </div>
-
                 <button type="submit" class="btn btn-primary mt-3">Enviar</button>
                         </form>
         </form>
-
         <form id="formulario_largo" action="guardar_turno_mb_tecnologos.php" method="POST" style="display: none;">
-            <!-- Formulario para Turno Largo -->
-            <h5>Formulario Turno Largo</h5>
-            <body>
-                <h5>1.- Equipos y Sistema Informático</h5>
-                <div class="mb-3">
-                    <label for="observaciones_equipo">Observaciones:</label>
-                    <textarea id="observaciones_equipo" name="observaciones_equipo" class="form-control"></textarea>
-                </div>
+    <!-- Formulario para Turno Largo -->
+    <h5>Formulario Turno Largo</h5>
+    <input type="hidden" id="fecha_input_largo" name="fecha" />
+    <input type="hidden" id="tipoturno_input_largo" name="tipoturno" />
+    <div>
+        <h5>1.- Equipos y Sistema Informático</h5>
+        <div class="mb-3">
+            <label for="observaciones_equipo">Observaciones:</label>
+            <textarea id="observaciones_equipo" name="observaciones_equipo" class="form-control"></textarea>
+        </div>
 
-                <h5>2.- Mantenciones Equipos</h5>
-                <div class="mb-3">
-                    <label for="mantencion">Observaciones:</label>
-                    <textarea id="mantencion" name="mantencion" class="form-control"></textarea>
-                </div>
+        <h5>2.- Mantenciones Equipos</h5>
+        <div class="mb-3">
+            <label for="mantencion">Observaciones:</label>
+            <textarea id="mantencion" name="mantencion" class="form-control"></textarea>
+        </div>
 
-                <h5>Equipos</h5>
-                <div class="mb-3">
-                    <input type="checkbox" id="cobas_c311" name="cobas_c311"> Cobas E411<br>
-                </div>
+        <h5>Equipos</h5>
+        <div class="mb-3">
+            <input type="checkbox" id="cobas_c311" name="cobas_c311"> Cobas E411<br>
+        </div>
 
-                <h5>3.- UMT</h5>
-                <div class="mb-3">
-                    <label for="transfusiones">Transfusiones Pendientes y Observaciones:</label>
-                    <textarea id="transfusiones" name="transfusiones" class="form-control"></textarea>
-                </div>
+        <h5>3.- UMT</h5>
+        <div class="mb-3">
+            <label for="transfusiones">Transfusiones Pendientes y Observaciones:</label>
+            <textarea id="transfusiones" name="transfusiones" class="form-control"></textarea>
+        </div>
 
-                <h5>STOCK</h5>
-                <div class="mb-3">
-                    <input type="checkbox" id="gr_0" name="gr_0"> GR 0+<br>
-                    <input type="checkbox" id="gr_a" name="gr_a"> GR A+<br>
-                    <input type="checkbox" id="gr_oneg" name="gr_oneg"> GR ONEG<br>
-                    <input type="checkbox" id="gr_ab" name="gr_ab"> GR AB+<br>
-                    <input type="checkbox" id="pfc_o" name="pfc_o"> PFC O+<br>
-                    <input type="checkbox" id="pfc_a" name="pfc_a"> PFC A+<br>
-                    <input type="checkbox" id="pfc_b" name="pfc_b"> PFC B+<br>
-                    <input type="checkbox" id="pfc_ab" name="pfc_ab"> PFC AB+<br>
-                </div>
+        <h5>STOCK</h5>
+        <div class="mb-3">
+            <input type="checkbox" id="gr_0" name="gr_0"> GR 0+<br>
+            <input type="checkbox" id="gr_a" name="gr_a"> GR A+<br>
+            <input type="checkbox" id="gr_oneg" name="gr_oneg"> GR ONEG<br>
+            <input type="checkbox" id="gr_ab" name="gr_ab"> GR AB+<br>
+            <input type="checkbox" id="pfc_o" name="pfc_o"> PFC O+<br>
+            <input type="checkbox" id="pfc_a" name="pfc_a"> PFC A+<br>
+            <input type="checkbox" id="pfc_b" name="pfc_b"> PFC B+<br>
+            <input type="checkbox" id="pfc_ab" name="pfc_ab"> PFC AB+<br>
+        </div>
 
-                <h5>4.- Muestras Urgentes</h5>
-                <div class="mb-3">
-                    <label for="muestras_pendientes">Pendientes:</label>
-                    <textarea id="muestras_pendientes" name="muestras_pendientes" class="form-control"></textarea>
-                </div>
+        <h5>4.- Muestras Urgentes</h5>
+        <div class="mb-3">
+            <label for="muestras_pendientes">Pendientes:</label>
+            <textarea id="muestras_pendientes" name="muestras_pendientes" class="form-control"></textarea>
+        </div>
 
-                <h5>5.- Microbiología</h5>
-                <h6>Valores Críticos</h6>
-                <div class="mb-3">
-                    <textarea id="valores_criticos" name="valores_criticos" class="form-control"></textarea>
-                </div>
+        <h5>5.- Microbiología</h5>
+        <h6>Valores Críticos</h6>
+        <div class="mb-3">
+            <textarea id="valores_criticos" name="valores_criticos" class="form-control"></textarea>
+        </div>
 
-                <table class="table table-bordered mb-3">
-                    <tr>
-                        <th>Valores</th>
-                        <th>Observaciones</th>
-                    </tr>
-                    <tr>
-                        <td>Gram Hemocultivo</td>
-                        <td><input type="text" name="gram_hemocultivo" class="form-control"></td>
-                    </tr>
-                    <tr>
-                        <td>Gram Líquidos</td>
-                        <td><input type="text" name="gram_liquidos" class="form-control"></td>
-                    </tr>
-                </table>
+        <table class="table table-bordered mb-3">
+            <tr>
+                <th>Valores</th>
+                <th>Observaciones</th>
+            </tr>
+            <tr>
+                <td>Gram Hemocultivo</td>
+                <td><input type="text" name="gram_hemocultivo" class="form-control"></td>
+            </tr>
+            <tr>
+                <td>Gram Líquidos</td>
+                <td><input type="text" name="gram_liquidos" class="form-control"></td>
+            </tr>
+        </table>
 
-                <h5>Paneles Pendientes, Otras Observaciones</h5>
-                <div class="mb-3">
-                    <textarea id="paneles_pendientes" name="paneles_pendientes" class="form-control"></textarea>
-                </div>
+        <h5>Paneles Pendientes, Otras Observaciones</h5>
+        <div class="mb-3">
+            <textarea id="paneles_pendientes" name="paneles_pendientes" class="form-control"></textarea>
+        </div>
 
-                <h5>6.- Otras Observaciones, Cambios de Lote y Reactivos</h5>
-                <div class="mb-3">
-                    <textarea id="cambios_lote" name="cambios_lote" class="form-control"></textarea>
-                </div>
+        <h5>6.- Otras Observaciones, Cambios de Lote y Reactivos</h5>
+        <div class="mb-3">
+            <textarea id="cambios_lote" name="cambios_lote" class="form-control"></textarea>
+        </div>
 
-                <h5>7.- Insumos o Reactivos Críticos</h5>
-                <div class="mb-3">
-                    <textarea id="insumos_criticos" name="insumos_criticos" class="form-control"></textarea>
-                </div>
+        <h5>7.- Insumos o Reactivos Críticos</h5>
+        <div class="mb-3">
+            <textarea id="insumos_criticos" name="insumos_criticos" class="form-control"></textarea>
+        </div>
 
-                <h5>8.- Pendientes COVID</h5>
-                <div class="mb-3">
-                    <textarea id="pendientes_covid" name="pendientes_covid" class="form-control"></textarea>
-                </div>
-                <br>
-                <h4 class="text-center">Entrega de Turnos:</h4>
-                <br>
+        <h5>8.- Pendientes COVID</h5>
+        <div class="mb-3">
+            <textarea id="pendientes_covid" name="pendientes_covid" class="form-control"></textarea>
+        </div>
+        <br>
+<h4 class="text-center">Entrega de Turnos:</h4>
                 <br>
                 <div class="row">
                     <!-- TM Entrega -->
@@ -368,84 +360,80 @@ if (!$result) {
                     </div>
                 </div>
                 <button type="submit" class="btn btn-primary mt-3">Enviar</button>
-        </form>
-    </div>
-   
 <script>
-    function mostrarFormulario() {
-        var tipoTurno = document.getElementById('tipoturno').value;
-        var formularioLargo = document.getElementById('formulario_largo');
-        var formularioNoche = document.getElementById('formulario_noche');
+function mostrarFormulario() {
+    var tipoTurno = document.getElementById('tipoturno').value;
+    var formularioLargo = document.getElementById('formulario_largo');
+    var formularioNoche = document.getElementById('formulario_noche');
 
-        // Ocultar ambos formularios
-        formularioLargo.style.display = 'none';
-        formularioNoche.style.display = 'none';
+    // Ocultar ambos formularios
+    formularioLargo.style.display = 'none';
+    formularioNoche.style.display = 'none';
 
-        // Mostrar el formulario seleccionado
-        if (tipoTurno === 'turno_largo') {
-            formularioLargo.style.display = 'block';
-        } else if (tipoTurno === 'turno_noche') {
-            formularioNoche.style.display = 'block';
-        }
+    // Mostrar el formulario seleccionado
+    if (tipoTurno === 'turno_largo') {
+        formularioLargo.style.display = 'block';
+    } else if (tipoTurno === 'turno_noche') {
+        formularioNoche.style.display = 'block';
     }
+}
 
-    function setNombreYPinFuncionario(selectId, nombreId, pinId) {
-        var selectElement = document.getElementById(selectId);
-        var selectedOption = selectElement.options[selectElement.selectedIndex];
-        var nombreFuncionario = selectedOption.getAttribute('data-nombre');
-        var pinFuncionario = selectedOption.getAttribute('data-pin');
+function setNombreYPinFuncionario(selectId, nombreId, pinId) {
+    var selectElement = document.getElementById(selectId);
+    var selectedOption = selectElement.options[selectElement.selectedIndex];
+    var nombreFuncionario = selectedOption.getAttribute('data-nombre');
+    var pinFuncionario = selectedOption.getAttribute('data-pin');
 
-        document.getElementById(nombreId).value = nombreFuncionario;
-        document.getElementById(pinId).value = pinFuncionario;
+    document.getElementById(nombreId).value = nombreFuncionario;
+    document.getElementById(pinId).value = pinFuncionario;
+}
+
+function guardarDatos(event) {
+    var tipoTurno = document.getElementById("tipoturno").value;
+    var fecha = document.getElementById("fecha").value;
+
+    // Asignar los valores a los campos ocultos para enviarlos al servidor
+    if (document.getElementById("formulario_largo").style.display === 'block') {
+        document.getElementById("fecha_input_largo").value = fecha;
+        document.getElementById("tipoturno_input_largo").value = tipoTurno;
+    } else if (document.getElementById("formulario_noche").style.display === 'block') {
+        document.getElementById("fecha_input_noche").value = fecha;
+        document.getElementById("tipoturno_input_noche").value = tipoTurno;
     }
+}
 
-    function validarYEnviarkine(event) {
-        const funcionario1 = document.getElementById('funcionario_saliente_1');
-        const contraseña1 = document.getElementById('contrasena_saliente_1');
-
-        if (!funcionario1 || !contraseña1 || funcionario1.value === "" || contraseña1.value.trim() === "") {
+// Función para validar formulario
+function validarFormulario(event) {
+    const formularioVisible = document.querySelector('form[style="display: block;"]');
+    const inputsRequeridos = formularioVisible.querySelectorAll('input[required], textarea[required], select[required]');
+    
+    for (let input of inputsRequeridos) {
+        if (!input.value || input.value.trim() === "") {
             alert('Por favor, complete todos los campos.');
             event.preventDefault();
             return false;
         }
-
-        return true;
     }
+    
+    // Aquí puedes agregar más validaciones específicas si es necesario
+    return true;
+}
 
-    document.querySelector('form').addEventListener('submit', function(event) {
+document.querySelectorAll('form').forEach(form => {
+    form.addEventListener('submit', function(event) {
         var formularioLargo = document.getElementById('formulario_largo');
         var formularioNoche = document.getElementById('formulario_noche');
 
         // Verificar cuál formulario es visible y validar solo ese
-        if (formularioLargo.style.display === 'block' && !validarFormularioLargo(event)) {
-            event.preventDefault();
-            return false;
-        } else if (formularioNoche.style.display === 'block' && !validarFormularioNoche(event)) {
+        if ((formularioLargo.style.display === 'block' || formularioNoche.style.display === 'block') && !validarFormulario(event)) {
             event.preventDefault();
             return false;
         }
+
+        guardarDatos(event);
     });
-
-    function validarFormularioLargo(event) {
-        const funcionario1 = document.getElementById('funcionario_saliente_1');
-        const contraseña1 = document.getElementById('contrasena_saliente_1');
-
-        if (!funcionario1 || !contraseña1 || funcionario1.value === "" || contraseña1.value.trim() === "") {
-            alert('Por favor, complete todos los campos.');
-            event.preventDefault();
-            return false;
-        }
-
-        return true;
-    }
-
-    function validarFormularioNoche(event) {
-        // Aquí va la validación para el formulario de noche
-        alert('Formulario Noche validado.');
-        return true;
-    }
+});
 </script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-1CmRugG5aX5+I65R5BxDJjkGrtGk5r0PZ8iFv/V3+6Q/3D3De0hN/y4XXMn+Q3fj" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-1CmRugG5aX5+I65R5BxDJjkGrtGk5r0PZ8iFv/V3+6Q/3D3De0hN/y4XXMn+Q3fj" crossorigin="anonymous"></script>
 </body>
-
 </html>

@@ -325,7 +325,7 @@ $result = $stmt->get_result();
         <?php elseif (stripos($nombre_servicio, "tecnologos") !== false): ?>
             <a href="/formularios_php/TM_formulario_tecnologosmedicos.php?tipo=tecnologos_medicos">Entregar Turno Tecnólogos Médicos</a>
         <?php elseif (stripos($nombre_servicio, "mb_microbiologia_tens") !== false): ?>
-            <a href="/formularios_php/MB_formulario_tens.php?tipo=mb_microbiologia_tens">Entregar Turno Tecnólogos Médicos</a>
+            <a href="/formularios_php/MB_formulario_tens.php?tipo=mb_microbiologia_tens">Entregar Turno TENS Microbiologia</a>
         <?php else: ?>
             <p>No hay formularios disponibles para este servicio.</p>
         <?php endif; ?>

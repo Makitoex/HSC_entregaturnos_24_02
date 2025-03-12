@@ -48,37 +48,37 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $cambios_lote = $_POST['cambios_lote'] ?? null;
     $insumos_criticos = $_POST['insumos_criticos'] ?? null;
     $pendientes_covid = $_POST['pendientes_covid'] ?? null;
-    $funcionario_saliente_id = $_POST['funcionario_saliente_1'] ?? null;
-    $nombre_funcionario_saliente = $_POST['nombre_funcionario_saliente_1'] ?? null;
-    $pin_funcionario_saliente = $_POST['pin_funcionario_saliente_1'] ?? null;
-    $funcionario_entrante_id = $_POST['funcionario_entrante_1'] ?? null;
-    $nombre_funcionario_entrante = $_POST['nombre_funcionario_entrante_1'] ?? null;
-    $pin_funcionario_entrante = $_POST['pin_funcionario_entrante_1'] ?? null;
-    $contrasena_saliente = $_POST['contrasena_saliente_1'] ?? null;
-    $contrasena_entrante = $_POST['contrasena_entrante_1'] ?? null;
+    $funcionario_saliente_1 = $_POST['funcionario_saliente_1'] ?? null;
+    $nombre_funcionario_saliente_1 = $_POST['nombre_funcionario_saliente_1'] ?? null;
+    $funcionario_entrante_1 = $_POST['funcionario_entrante_1'] ?? null;
+    $nombre_funcionario_entrante_1 = $_POST['nombre_funcionario_entrante_1'] ?? null;
+    $contrasena_saliente_1 = $_POST['contrasena_saliente_1'] ?? null;
 
     $sql = "INSERT INTO formulario_turnos_mb_tecnologos_medicos (
-                fecha, tipoturno, observaciones_equipo, tecnicas_calibradas, observaciones_quimica,
-                quimica, hormonas, gases_elp, crd, vih_hepb, sp, mantencion, cobas_c311, cobas_c111,
-                transfusiones, gr_0, gr_a, gr_oneg, gr_b, gr_ab, pfc_o, pfc_a, pfc_b, pfc_ab,
-                muestras_pendientes, valores_criticos, gram_hemocultivo, gram_liquidos, paneles_pendientes,
-                cambios_lote, insumos_criticos, pendientes_covid, funcionario_saliente_id,
-                nombre_funcionario_saliente, pin_funcionario_saliente, funcionario_entrante_id,
-                nombre_funcionario_entrante, pin_funcionario_entrante, contrasena_saliente, contrasena_entrante
-            ) VALUES (
-                ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
-            )";
+        fecha, tipoturno, observaciones_equipo, tecnicas_calibradas, observaciones_quimica,
+        quimica, hormonas, gases_elp, crd, vih_hepb, sp, mantencion, cobas_c311, cobas_c111,
+        transfusiones, gr_0, gr_a, gr_oneg, gr_b, gr_ab, pfc_o, pfc_a, pfc_b, pfc_ab,
+        muestras_pendientes, valores_criticos, gram_hemocultivo, gram_liquidos, paneles_pendientes,
+        cambios_lote, insumos_criticos, pendientes_covid, funcionario_saliente_1,
+        nombre_funcionario_saliente_1, funcionario_entrante_1,
+        nombre_funcionario_entrante_1, contrasena_saliente_1
+    ) VALUES (
+        ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? , ?
+    )";
 
     $stmt = mysqli_prepare($conn, $sql);
-    mysqli_stmt_bind_param($stmt, 'ssssssssssssssssssssssssssssssssssssssss',
-        $fecha, $tipoturno, $observaciones_equipo, $tecnicas_calibradas, $observaciones_quimica,
-        $quimica, $hormonas, $gases_elp, $crd, $vih_hepb, $sp, $mantencion, $cobas_c311, $cobas_c111,
-        $transfusiones, $gr_0, $gr_a, $gr_oneg, $gr_b, $gr_ab, $pfc_o, $pfc_a, $pfc_b, $pfc_ab,
-        $muestras_pendientes, $valores_criticos, $gram_hemocultivo, $gram_liquidos, $paneles_pendientes,
-        $cambios_lote, $insumos_criticos, $pendientes_covid, $funcionario_saliente_id,
-        $nombre_funcionario_saliente, $pin_funcionario_saliente, $funcionario_entrante_id,
-        $nombre_funcionario_entrante, $pin_funcionario_entrante, $contrasena_saliente, $contrasena_entrante
-    );
+    if (!$stmt) {
+        die('mysqli error: ' . mysqli_error($conn));
+    }
+    mysqli_stmt_bind_param($stmt, 'ssssiiiiiiiiissiisiiiiiiiiissssssssss', 
+    $fecha, $tipoturno, $observaciones_equipo, $tecnicas_calibradas, $observaciones_quimica,
+    $quimica, $hormonas, $gases_elp, $crd, $vih_hepb, $sp, $mantencion, $cobas_c311, $cobas_c111,
+    $transfusiones, $gr_0, $gr_a, $gr_oneg, $gr_b, $gr_ab, $pfc_o, $pfc_a, $pfc_b, $pfc_ab,
+    $muestras_pendientes, $valores_criticos, $gram_hemocultivo, $gram_liquidos, $paneles_pendientes,
+    $cambios_lote, $insumos_criticos, $pendientes_covid, $funcionario_saliente_1,
+    $nombre_funcionario_saliente_1, $funcionario_entrante_1,
+    $nombre_funcionario_entrante_1, $contrasena_saliente_1
+);
 
     if (mysqli_stmt_execute($stmt)) {
         echo "Registro guardado exitosamente.";
