@@ -31,7 +31,7 @@ $nombre_servicio = $row_servicio['nombre_servicio'] ?? "No asignado";
 $stmt->close();
 
 // Depuración: verificar el valor de $nombre_servicio
-echo "Servicio ONLINE: " . htmlspecialchars($nombre_servicio);
+echo "ONLINE: " . htmlspecialchars($nombre_servicio);
 
 if (stripos($nombre_servicio, "uti_tens") !== false) {
     $tabla = "formulario_turnos_uti_tens";
@@ -164,11 +164,11 @@ if (stripos($nombre_servicio, "uti_tens") !== false) {
                 tm.tipoturno
               FROM $tabla tm
               LEFT JOIN funcionarios_imagenologia fs1 ON tm.funcionario_saliente_1 = fs1.id_funcionarios
-              LEFT JOIN funcionarios_imagenologia fe1 ON tm.funcionario_entrante_1 = fe1.id_funcionarios
+              LEFT JOIN funcionarios_imagenologia fe1 ON tm.funcionario_entrante_1 = fs1.id_funcionarios
               ORDER BY tm.id DESC
               LIMIT ?, ?";
     $total_query = "SELECT COUNT(*) AS total FROM $tabla";
-} elseif (stripos($nombre_servicio, "mb_microbiologia_tens") !== false) { // Ajuste aquí
+} elseif (stripos($nombre_servicio, "mb_microbiologia_tens") !== false) {
     $tabla = "formulario_turnos_mb_tens";
     $query = "SELECT 
                 tm.id, 
@@ -182,8 +182,21 @@ if (stripos($nombre_servicio, "uti_tens") !== false) {
               ORDER BY tm.id DESC
               LIMIT ?, ?";
     $total_query = "SELECT COUNT(*) AS total FROM $tabla";
-}
- else {
+} elseif (stripos($nombre_servicio, "MB_microbiologia_tecnologos") !== false) {
+    $tabla = "formulario_turnos_mb_tecnologos_medicos";
+    $query = "SELECT 
+                tm.id, 
+                tm.fecha,
+                fs1.nombre_funcionarios AS funcionario_saliente_1,
+                fe1.nombre_funcionarios AS funcionario_entrante_1,
+                tm.tipoturno
+              FROM $tabla tm
+              LEFT JOIN funcionarios_microbiologia fs1 ON tm.funcionario_saliente = fs1.id_funcionarios
+              LEFT JOIN funcionarios_microbiologia fe1 ON tm.funcionario_entrante = fe1.id_funcionarios
+              ORDER BY tm.id DESC
+              LIMIT ?, ?";
+    $total_query = "SELECT COUNT(*) AS total FROM $tabla";
+} else {
     // Default
     $tabla = "formulario_turnos_uti_enfermeros";
     $query = "SELECT 
@@ -203,7 +216,6 @@ if (stripos($nombre_servicio, "uti_tens") !== false) {
               LIMIT ?, ?";
     $total_query = "SELECT COUNT(*) AS total FROM $tabla";
 }
-
 if (!empty($total_query)) {
     $total_result = mysqli_query($conn, $total_query);
     if ($total_result) {
@@ -310,6 +322,8 @@ $result = $stmt->get_result();
         <h2 class="menu-title">Menú Principal</h2>
         <?php if (stripos($nombre_servicio, "uci_enfermeros") !== false): ?>
             <a href="/formularios_php/UCI_formulario_enfermeros.php?tipo=uci_enfermeros">Entregar Turno UCI Enfermeros</a>
+        <?php elseif (stripos($nombre_servicio, "Mb_microbiologia_tens") !== false): ?>
+            <a href="/formularios_php/MB_formulario_tens.php?tipo=tens">Entregar Turno TENS MB</a>
         <?php elseif (stripos($nombre_servicio, "enfermeros") !== false): ?>
             <a href="/formularios_php/UTI_formulario_enfermeros.php?tipo=uti">Entregar Turno Enfermeros UTI</a>
         <?php elseif (stripos($nombre_servicio, "uci_tens") !== false): ?>
@@ -322,14 +336,13 @@ $result = $stmt->get_result();
             <a href="/formularios_php/UTI_formulario_kinesiologos.php?tipo=kinesio">Entregar Turno Kinesiología UTI</a>
         <?php elseif (stripos($nombre_servicio, "upc_medicos") !== false): ?>
             <a href="/formularios_php/UPC_formulario_medicos.php?tipo=medicos">Entregar Turno UPC Medicos</a>
+        <?php elseif (stripos($nombre_servicio, "MB_microbiologia_tecnologos") !== false): ?>
+            <a href="/formularios_php/MB_formulario_tecnologos_medicos.php?tipo=MB_microbiologia_tecnologos">Entregar Turno Tecnólogos Médicos MB</a>
         <?php elseif (stripos($nombre_servicio, "tecnologos") !== false): ?>
             <a href="/formularios_php/TM_formulario_tecnologosmedicos.php?tipo=tecnologos_medicos">Entregar Turno Tecnólogos Médicos</a>
-        <?php elseif (stripos($nombre_servicio, "mb_microbiologia_tens") !== false): ?>
-            <a href="/formularios_php/MB_formulario_tens.php?tipo=mb_microbiologia_tens">Entregar Turno TENS Microbiologia</a>
         <?php else: ?>
             <p>No hay formularios disponibles para este servicio.</p>
         <?php endif; ?>
-
         <br>
         <hr>
         <br>
@@ -353,132 +366,134 @@ $result = $stmt->get_result();
             <input type="text" id="filtrar_tabla" placeholder="Buscar..." onkeyup="filtrarTabla()">
         </div>
         <!-- TABLA DE REGISTROS -->
-<div class="table-container">
-    <table border="1">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Fecha</th>
-                <th>Funcionarios Salientes</th>
-                <th>Funcionarios Entrantes</th>
-                <th>Tipo de Turno</th>
-                <th>PDF</th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php while ($row = $result->fetch_assoc()) { ?>
-                <tr>
-                    <td><?= htmlspecialchars($row['id']) ?></td>
-                    <td><?= htmlspecialchars($row['fecha']) ?></td>
-                    <td>
-                        <?php
-                        // Lógica para mostrar los funcionarios salientes según el servicio
-                        if (stripos($nombre_servicio, "mb_microbiologia_tens") !== false) {
-                            // Si es servicio de microbiología
-                            echo htmlspecialchars($row['funcionario_saliente_1'] ?? 'N/A') ;
-                        } elseif (stripos($nombre_servicio, "uci_enfermeros") !== false) {
-                            echo htmlspecialchars($row['funcionario_saliente_1'] ?? 'N/A') . ", " .
-                                 htmlspecialchars($row['funcionario_saliente_2'] ?? 'N/A');
-                        } elseif (stripos($nombre_servicio, "kinesiologos") !== false || stripos($nombre_servicio, "uci_kinesiologos") !== false || stripos($nombre_servicio, "upc_medicos") !== false || stripos($nombre_servicio, "im_tecnologos") !== false) {
-                            echo htmlspecialchars($row['funcionario_saliente_1'] ?? 'N/A');
-                        } elseif (stripos($nombre_servicio, "uti_tens") !== false || stripos($nombre_servicio, "uci_tens") !== false) {
-                            echo htmlspecialchars($row['funcionario_saliente_1'] ?? 'N/A') . ", " .
-                                 htmlspecialchars($row['funcionario_saliente_2'] ?? 'N/A') . ", " .
-                                 htmlspecialchars($row['funcionario_saliente_3'] ?? 'N/A');
-                        } else {
-                            echo htmlspecialchars($row['funcionario_saliente_1'] ?? 'N/A') . ", " .
-                                 htmlspecialchars($row['funcionario_saliente_2'] ?? 'N/A');
-                        }
-                        ?>
-                    </td>
-                    <td>
-                        <?php
-                        // Lógica para mostrar los funcionarios entrantes según el servicio
-                        if (stripos($nombre_servicio, "mb_microbiologia_tens") !== false) {
-                            // Si es servicio de microbiología
-                            echo htmlspecialchars($row['funcionario_entrante_1'] ?? 'N/A');
-                        } elseif (stripos($nombre_servicio, "uci_enfermeros") !== false) {
-                            echo htmlspecialchars($row['funcionario_entrante_1'] ?? 'N/A') . ", " .
-                                 htmlspecialchars($row['funcionario_entrante_2'] ?? 'N/A');
-                        } elseif (stripos($nombre_servicio, "kinesiologos") !== false || stripos($nombre_servicio, "uci_kinesiologos") !== false || stripos($nombre_servicio, "upc_medicos") !== false || stripos($nombre_servicio, "im_tecnologos") !== false) {
-                            echo htmlspecialchars($row['funcionario_entrante_1'] ?? 'N/A');
-                        } elseif (stripos($nombre_servicio, "uti_tens") !== false || stripos($nombre_servicio, "uci_tens") !== false) {
-                            echo htmlspecialchars($row['funcionario_entrante_1'] ?? 'N/A') . ", " .
-                                 htmlspecialchars($row['funcionario_entrante_2'] ?? 'N/A') . ", " .
-                                 htmlspecialchars($row['funcionario_entrante_3'] ?? 'N/A');
-                        } else {
-                            echo htmlspecialchars($row['funcionario_entrante_1'] ?? 'N/A') . ", " .
-                                 htmlspecialchars($row['funcionario_entrante_2'] ?? 'N/A');
-                        }
-                        ?>
-                    </td>
-                    <td>
-                        <?= htmlspecialchars($row['tipoturno'] ?? 'POR HORAS') ?>
-                    </td>
-                    <td>
-                        <?php
-                        // Lógica para generar el PDF según el servicio
-                        if (stripos($nombre_servicio, "mb_microbiologia_tens") !== false) {
-                            echo '<a href="formularios_php/generar_pdf_mb_microbiologia_tens.php?id=' . $row['id'] . '" target="_blank">Generar PDF</a>';
-                        } elseif (stripos($nombre_servicio, "uci_enfermeros") !== false) {
-                            echo '<a href="formularios_php/generar_pdf_uci_enfermeros.php?id=' . $row['id'] . '" target="_blank">Generar PDF</a>';
-                        } elseif (stripos($nombre_servicio, "enfermeros") !== false) {
-                            echo '<a href="formularios_php/generar_pdf_uti_enfermeros.php?id=' . $row['id'] . '" target="_blank">Generar PDF</a>';
-                        } elseif (stripos($nombre_servicio, "uti_tens") !== false) {
-                            echo '<a href="formularios_php/generar_pdf_uti_tens.php?id=' . $row['id'] . '" target="_blank">Generar PDF</a>';
-                        } elseif (stripos($nombre_servicio, "uci_tens") !== false) {
-                            echo '<a href="formularios_php/generar_pdf_uci_tens.php?id=' . $row['id'] . '" target="_blank">Generar PDF</a>';
-                        } elseif (stripos($nombre_servicio, "uci_kinesiologos") !== false) {
-                            echo '<a href="formularios_php/generar_pdf_uci_kinesiologos.php?id=' . $row['id'] . '" target="_blank">Generar PDF</a>';
-                        } elseif (stripos($nombre_servicio, "kinesiologos") !== false) {
-                            echo '<a href="formularios_php/generar_pdf_uti_kinesiologos.php?id=' . $row['id'] . '" target="_blank">Generar PDF</a>';
-                        } elseif (stripos($nombre_servicio, "upc_medicos") !== false) {
-                            echo '<a href="formularios_php/generar_pdf_upc_medicos.php?id=' . $row['id'] . '" target="_blank">Generar PDF</a>';
-                        } elseif (stripos($nombre_servicio, "im_tecnologos") !== false) {
-                            echo '<a href="formularios_php/generar_pdf_im_tecnologos_medicos.php?id=' . $row['id'] . '" target="_blank">Generar PDF</a>';
-                        }
-                        ?>
-                    </td>
-                </tr>
-            <?php } ?>
-        </tbody>
-    </table>
-</div>
+        <div class="table-container">
+            <table border="1">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Fecha</th>
+                        <th>Funcionarios Salientes</th>
+                        <th>Funcionarios Entrantes</th>
+                        <th>Tipo de Turno</th>
+                        <th>PDF</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php while ($row = $result->fetch_assoc()) { ?>
+                        <tr>
+                            <td><?= htmlspecialchars($row['id']) ?></td>
+                            <td><?= htmlspecialchars($row['fecha']) ?></td>
+                            <td>
+                                <?php
+                                // Lógica para mostrar los funcionarios salientes según el servicio
+                                if (stripos($nombre_servicio, "mb_microbiologia_tecnologos") !== false || stripos($nombre_servicio, "mb_microbiologia_tens") !== false) {
+                                    // Si es servicio de microbiología
+                                    echo htmlspecialchars($row['funcionario_saliente_1'] ?? 'N/A');
+                                } elseif (stripos($nombre_servicio, "uci_enfermeros") !== false) {
+                                    echo htmlspecialchars($row['funcionario_saliente_1'] ?? 'N/A') . ", " .
+                                        htmlspecialchars($row['funcionario_saliente_2'] ?? 'N/A');
+                                } elseif (stripos($nombre_servicio, "kinesiologos") !== false || stripos($nombre_servicio, "uci_kinesiologos") !== false || stripos($nombre_servicio, "upc_medicos") !== false || stripos($nombre_servicio, "im_tecnologos") !== false) {
+                                    echo htmlspecialchars($row['funcionario_saliente_1'] ?? 'N/A');
+                                } elseif (stripos($nombre_servicio, "uti_tens") !== false || stripos($nombre_servicio, "uci_tens") !== false) {
+                                    echo htmlspecialchars($row['funcionario_saliente_1'] ?? 'N/A') . ", " .
+                                        htmlspecialchars($row['funcionario_saliente_2'] ?? 'N/A') . ", " .
+                                        htmlspecialchars($row['funcionario_saliente_3'] ?? 'N/A');
+                                } else {
+                                    echo htmlspecialchars($row['funcionario_saliente_1'] ?? 'N/A') . ", " .
+                                        htmlspecialchars($row['funcionario_saliente_2'] ?? 'N/A');
+                                }
+                                ?>
+                            </td>
+                            <td>
+                                <?php
+                                // Lógica para mostrar los funcionarios entrantes según el servicio
+                                if (stripos($nombre_servicio, "mb_microbiologia_tecnologos") !== false || stripos($nombre_servicio, "mb_microbiologia_tens") !== false) {
+                                    // Si es servicio de microbiología
+                                    echo htmlspecialchars($row['funcionario_entrante_1'] ?? 'N/A');
+                                } elseif (stripos($nombre_servicio, "uci_enfermeros") !== false) {
+                                    echo htmlspecialchars($row['funcionario_entrante_1'] ?? 'N/A') . ", " .
+                                        htmlspecialchars($row['funcionario_entrante_2'] ?? 'N/A');
+                                } elseif (stripos($nombre_servicio, "kinesiologos") !== false || stripos($nombre_servicio, "uci_kinesiologos") !== false || stripos($nombre_servicio, "upc_medicos") !== false || stripos($nombre_servicio, "im_tecnologos") !== false) {
+                                    echo htmlspecialchars($row['funcionario_entrante_1'] ?? 'N/A');
+                                } elseif (stripos($nombre_servicio, "uti_tens") !== false || stripos($nombre_servicio, "uci_tens") !== false) {
+                                    echo htmlspecialchars($row['funcionario_entrante_1'] ?? 'N/A') . ", " .
+                                        htmlspecialchars($row['funcionario_entrante_2'] ?? 'N/A') . ", " .
+                                        htmlspecialchars($row['funcionario_entrante_3'] ?? 'N/A');
+                                } else {
+                                    echo htmlspecialchars($row['funcionario_entrante_1'] ?? 'N/A') . ", " .
+                                        htmlspecialchars($row['funcionario_entrante_2'] ?? 'N/A');
+                                }
+                                ?>
+                            </td>
+                            <td>
+                                <?= htmlspecialchars($row['tipoturno'] ?? 'POR HORAS') ?>
+                            </td>
+                            <td>
+                                <?php
+                                // Lógica para generar el PDF según el servicio
+                                if (stripos($nombre_servicio, "mb_microbiologia_tecnologos") !== false) {
+                                    echo '<a href="formularios_php/generar_pdf_mb_microbiologia_tecnologos.php?id=' . $row['id'] . '" target="_blank">Generar PDF</a>';
+                                } elseif (stripos($nombre_servicio, "mb_microbiologia_tens") !== false) {
+                                    echo '<a href="formularios_php/generar_pdf_mb_microbiologia_tens.php?id=' . $row['id'] . '" target="_blank">Generar PDF</a>';
+                                } elseif (stripos($nombre_servicio, "uci_enfermeros") !== false) {
+                                    echo '<a href="formularios_php/generar_pdf_uci_enfermeros.php?id=' . $row['id'] . '" target="_blank">Generar PDF</a>';
+                                } elseif (stripos($nombre_servicio, "enfermeros") !== false) {
+                                    echo '<a href="formularios_php/generar_pdf_uti_enfermeros.php?id=' . $row['id'] . '" target="_blank">Generar PDF</a>';
+                                } elseif (stripos($nombre_servicio, "uti_tens") !== false) {
+                                    echo '<a href="formularios_php/generar_pdf_uti_tens.php?id=' . $row['id'] . '" target="_blank">Generar PDF</a>';
+                                } elseif (stripos($nombre_servicio, "uci_tens") !== false) {
+                                    echo '<a href="formularios_php/generar_pdf_uci_tens.php?id=' . $row['id'] . '" target="_blank">Generar PDF</a>';
+                                } elseif (stripos($nombre_servicio, "uci_kinesiologos") !== false) {
+                                    echo '<a href="formularios_php/generar_pdf_uci_kinesiologos.php?id=' . $row['id'] . '" target="_blank">Generar PDF</a>';
+                                } elseif (stripos($nombre_servicio, "kinesiologos") !== false) {
+                                    echo '<a href="formularios_php/generar_pdf_uti_kinesiologos.php?id=' . $row['id'] . '" target="_blank">Generar PDF</a>';
+                                } elseif (stripos($nombre_servicio, "upc_medicos") !== false) {
+                                    echo '<a href="formularios_php/generar_pdf_upc_medicos.php?id=' . $row['id'] . '" target="_blank">Generar PDF</a>';
+                                } elseif (stripos($nombre_servicio, "im_tecnologos") !== false) {
+                                    echo '<a href="formularios_php/generar_pdf_im_tecnologos_medicos.php?id=' . $row['id'] . '" target="_blank">Generar PDF</a>';
+                                }
+                                ?>
+                            </td>
+                        </tr>
+                    <?php } ?>
+                </tbody>
+            </table>
+        </div>
 
-       <!-- PAGINACIÓN -->
-<!-- PAGINACIÓN -->
-<div style="margin-top: 40px; text-align: center;">
-    <?php
-    // Solo mostrar el botón "Anterior" si no estamos en la primera página
-    if ($pagina_actual > 1): ?>
-        <a href="?pagina=1" style="margin: 0 5px; padding: 5px 10px; background-color:#0056b3; color: white; text-decoration: none; border-radius: 5px;">Primero</a>
-        <a href="?pagina=<?= $pagina_actual - 1 ?>" style="margin: 0 5px; padding: 5px 10px; background-color:#0056b3; color: white; text-decoration: none; border-radius: 5px;">&laquo; Anterior</a>
-    <?php endif; ?>
+        <!-- PAGINACIÓN -->
+        <!-- PAGINACIÓN -->
+        <div style="margin-top: 40px; text-align: center;">
+            <?php
+            // Solo mostrar el botón "Anterior" si no estamos en la primera página
+            if ($pagina_actual > 1): ?>
+                <a href="?pagina=1" style="margin: 0 5px; padding: 5px 10px; background-color:#0056b3; color: white; text-decoration: none; border-radius: 5px;">Primero</a>
+                <a href="?pagina=<?= $pagina_actual - 1 ?>" style="margin: 0 5px; padding: 5px 10px; background-color:#0056b3; color: white; text-decoration: none; border-radius: 5px;">&laquo; Anterior</a>
+            <?php endif; ?>
 
-    <?php
-    // Límite de páginas visibles (máximo 4)
-    $max_visible = 4;
-    $start = max(1, $pagina_actual - 1); // Comienza una página antes de la actual
-    $end = min($total_paginas, $start + $max_visible - 1); // Calcula el rango máximo de 4 páginas
+            <?php
+            // Límite de páginas visibles (máximo 4)
+            $max_visible = 4;
+            $start = max(1, $pagina_actual - 1); // Comienza una página antes de la actual
+            $end = min($total_paginas, $start + $max_visible - 1); // Calcula el rango máximo de 4 páginas
 
-    // Si el rango excede el total de páginas, ajusta el inicio
-    if ($end - $start + 1 < $max_visible) {
-        $start = max(1, $end - $max_visible + 1);
-    }
+            // Si el rango excede el total de páginas, ajusta el inicio
+            if ($end - $start + 1 < $max_visible) {
+                $start = max(1, $end - $max_visible + 1);
+            }
 
-    for ($i = $start; $i <= $end; $i++): ?>
-        <a href="?pagina=<?= $i ?>" style="margin: 0 5px; padding: 5px 10px; background-color: <?= $i == $pagina_actual ? '#28a745' : '#0056b3'; ?>; color: white; text-decoration: none; border-radius: 5px;">
-            <?= $i ?>
-        </a>
-    <?php endfor; ?>
+            for ($i = $start; $i <= $end; $i++): ?>
+                <a href="?pagina=<?= $i ?>" style="margin: 0 5px; padding: 5px 10px; background-color: <?= $i == $pagina_actual ? '#28a745' : '#0056b3'; ?>; color: white; text-decoration: none; border-radius: 5px;">
+                    <?= $i ?>
+                </a>
+            <?php endfor; ?>
 
-    <?php
-    // Solo mostrar el botón "Siguiente" si no estamos en la última página
-    if ($pagina_actual < $total_paginas): ?>
-        <a href="?pagina=<?= $pagina_actual + 1 ?>" style="margin: 0 5px; padding: 5px 10px; background-color:#0056b3; color: white; text-decoration: none; border-radius: 5px;">Siguiente &raquo;</a>
-        <a href="?pagina=<?= $total_paginas ?>" style="margin: 0 5px; padding: 5px 10px; background-color:#0056b3; color: white; text-decoration: none; border-radius: 5px;">Último</a>
-    <?php endif; ?>
-</div>
+            <?php
+            // Solo mostrar el botón "Siguiente" si no estamos en la última página
+            if ($pagina_actual < $total_paginas): ?>
+                <a href="?pagina=<?= $pagina_actual + 1 ?>" style="margin: 0 5px; padding: 5px 10px; background-color:#0056b3; color: white; text-decoration: none; border-radius: 5px;">Siguiente &raquo;</a>
+                <a href="?pagina=<?= $total_paginas ?>" style="margin: 0 5px; padding: 5px 10px; background-color:#0056b3; color: white; text-decoration: none; border-radius: 5px;">Último</a>
+            <?php endif; ?>
+        </div>
 
     </div>
     <script src="js/filtrar_tabla.js"></script>
