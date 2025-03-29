@@ -20,7 +20,12 @@ $tablas = [
     "formulario_turnos_uti_tens",
     "formulario_turnos_im_tecnologos_medicos",
     "formulario_turnos_mb_tens",
-    "formulario_turnos_mb_tecnologos_medicos"
+    "formulario_turnos_mb_tecnologos_medicos",
+    "formulario_turnos_pb_enfermeros",
+    "formulario_turnos_pb_tens",
+    "formulario_turnos_pb_anestesistas",
+    "formulario_turnos_mb_tens",
+    "formulario_turnos_pd_tens_pediatria",
 ];
 
 include 'navbar_calidad.php';

@@ -58,6 +58,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && !isset($_POST['eliminar'])) {
         $tabla = 'funcionarios_microbiologia';
     } elseif ($tipo_funcionario === 'Pabellon') {
         $tabla = 'funcionarios_pabellon';
+    } elseif ($tipo_funcionario === 'Pediatria') {
+        $tabla = 'funcionarios_pediatria';
     }
 
     // Insertar en la tabla correspondiente
@@ -103,6 +105,11 @@ $sql_lista = "(SELECT f.id_funcionarios, f.nombre_funcionarios, f.rut_funcionari
                FROM funcionarios_pabellon f
                INNER JOIN profesiones p ON f.id_profesion = p.id_profesion
                WHERE f.nombre_funcionarios LIKE '%$buscar%' OR f.rut_funcionarios LIKE '%$buscar%')
+              UNION
+              (SELECT f.id_funcionarios, f.nombre_funcionarios, f.rut_funcionarios, p.nombre_profesion, f.id_servicio, 'funcionarios_pediatria' AS tabla, 'Pediatria' AS tipo
+               FROM funcionarios_pediatria f
+               INNER JOIN profesiones p ON f.id_profesion = p.id_profesion
+               WHERE f.nombre_funcionarios LIKE '%$buscar%' OR f.rut_funcionarios LIKE '%$buscar%')
               LIMIT $inicio, $registros_por_pagina";
 
 $resultado = $conn->query($sql_lista);
@@ -116,7 +123,9 @@ $sql_total = "(SELECT COUNT(*) AS total FROM funcionarios_uti WHERE nombre_funci
               UNION
               (SELECT COUNT(*) AS total FROM funcionarios_microbiologia WHERE nombre_funcionarios LIKE '%$buscar%' OR rut_funcionarios LIKE '%$buscar%')
               UNION
-              (SELECT COUNT(*) AS total FROM funcionarios_pabellon WHERE nombre_funcionarios LIKE '%$buscar%' OR rut_funcionarios LIKE '%$buscar%')";
+              (SELECT COUNT(*) AS total FROM funcionarios_pabellon WHERE nombre_funcionarios LIKE '%$buscar%' OR rut_funcionarios LIKE '%$buscar%')
+              UNION
+              (SELECT COUNT(*) AS total FROM funcionarios_pediatria WHERE nombre_funcionarios LIKE '%$buscar%' OR rut_funcionarios LIKE '%$buscar%')";
 $total_result = $conn->query($sql_total);
 $total_registros = 0;
 while ($fila = $total_result->fetch_assoc()) {
@@ -193,6 +202,7 @@ $conn->close();
                         <option value="Imagenología">Imagenología</option>
                         <option value="Microbiologia">Microbiologia</option>
                         <option value="Pabellon">Pabellon</option>
+                        <option value="Pediatria">Pediatria</option>
                     </select>
                 </div>
 

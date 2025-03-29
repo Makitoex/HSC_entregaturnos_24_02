@@ -94,8 +94,8 @@ $stmt->close();
         }
 
         .main-content {
-            margin-left: 60px; /* Ajusta este valor si cambias el ancho del sidenav */
-            padding: 10px; /* Reduce el padding para acercar el contenido al menú */
+            margin-left: 60px; 
+            padding: 10px; 
         }
 
         .header-container {
@@ -337,6 +337,12 @@ $stmt->close();
                 <option value="formulario_turnos_uti_tens">Turnos UTI Tens</option>
                 <option value="formulario_turnos_im_tecnologos_medicos">Turnos Imagenologia TM</option>
                 <option value="formulario_turnos_mb_tecnologos_medicos">Turnos Microbiologia TM</option>
+                <option value="formulario_turnos_mb_tens">Turnos Microbiologia TENS</option>
+                <option value="formulario_turnos_pb_enfermeros">Turnos Pabellon Enfermeros</option>
+                <option value="formulario_turnos_pb_tens">Turnos Pabellon TENS</option>
+                <option value="formulario_turnos_pb_anestesistas">Turnos Pabellon Anestesiologos</option>
+                <option value="formulario_turnos_pd_tens_pediatria">Turnos Pediatria Tens TM</option>
+
             </select>
         </div>
         <div class="selector-container">
