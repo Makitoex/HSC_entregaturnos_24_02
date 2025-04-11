@@ -4,13 +4,13 @@ function validarYEnviarupcmedico(event) {
 
     if (!funcionario1 || !contraseña1) {
         alert('Error: No se encontraron los campos de funcionario o PIN.');
-        event.preventDefault();  // Evita el envío
+        event.preventDefault();  
         return false;
     }
 
     if (funcionario1.selectedIndex === -1) {
         alert('Por favor, selecciona un funcionario.');
-        event.preventDefault();  // Evita el envío
+        event.preventDefault();  
         return false;
     }
 
@@ -19,7 +19,7 @@ function validarYEnviarupcmedico(event) {
 
     if (contraseña1.value.trim() !== pinCorrecto1) {
         alert('El PIN del Funcionario Saliente 1 es incorrecto.');
-        event.preventDefault();  // Evita el envío
+        event.preventDefault();  
         return false;
     }
 

@@ -11,9 +11,9 @@ function mostrarOpcionesDomingo() {
 }
 
 document.addEventListener('DOMContentLoaded', function () {
-    // Ejecuta la función al cargar la página
+  
     mostrarOpcionesDomingo();
 
-    // Escucha los cambios en el campo de fecha
+    
     document.getElementById('fecha').addEventListener('change', mostrarOpcionesDomingo);
 });

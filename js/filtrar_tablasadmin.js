@@ -4,7 +4,7 @@ function filtrartablasadmin() {
     const table = document.getElementById('dataTable');
     const trs = table.getElementsByTagName('tr');
 
-    for (let i = 1; i < trs.length; i++) { // Empezar desde 1 para saltar el encabezado
+    for (let i = 1; i < trs.length; i++) { 
         let display = false;
         const tds = trs[i].getElementsByTagName('td');
         for (let j = 0; j < tds.length; j++) {

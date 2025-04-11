@@ -86,7 +86,7 @@ $servicios = $conn->query("SELECT id_servicios, nombre_servicio FROM servicios")
                         <?= htmlspecialchars($row['nombre_servicio']) ?>
                     </option>
                 <?php } ?>
-                <!-- Agregar la opción "HSC_calidad" -->
+                
                 <option value="101" <?= (101 == $id_servicio) ? "selected" : "" ?>>HSC_calidad</option>
             </select>
             <select name="rol" class="form-select form-select-sm mb-2">

@@ -12,7 +12,7 @@ $id_usuario = $_SESSION['id_usuarios'];
 $mensaje = "";
 
 // Paginación
-$registros_por_pagina = 10; // Cambiar este número para ajustar el número de registros por página
+$registros_por_pagina = 10; 
 $pagina_actual = isset($_GET['pagina']) ? intval($_GET['pagina']) : 1;
 $offset = ($pagina_actual - 1) * $registros_por_pagina;
 
@@ -44,7 +44,7 @@ $sql_total = "SELECT COUNT(*) AS total FROM reportes WHERE id_usuario_destino = 
 $stmt_total = $conn->prepare($sql_total);
 $stmt_total->bind_param("i", $id_usuario);
 
-// Verificar errores en la ejecución de la consulta
+
 if (!$stmt_total->execute()) {
     die("Error en la consulta: " . $stmt_total->error);
 }

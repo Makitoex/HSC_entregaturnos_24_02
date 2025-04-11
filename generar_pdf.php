@@ -58,17 +58,17 @@ $pdf->SetFillColor(200, 220, 255);
 $pdf->ChapterTitle('Informacion General');
 $pdf->TableCell('Tabla', str_replace('_', ' ', ucwords($tableName)));
 
-// Agregar los datos de forma organizada
+
 foreach ($rowData as $key => $value) {
     $columnName = $columns[$key];
-    // Títulos de columnas en negrita y mayor tamaño
+    // Títulos de columnas en negrita 
     $pdf->SetFont('Arial', 'B', 8);
     $pdf->Cell(50, 6, "$columnName:", 1, 0, 'L', true);
-    // Valores en formato normal con mayor espacio
+
     $pdf->SetFont('Arial', '', 8);
     $pdf->MultiCell(0, 6, $value, 1, 'L');
-    // Línea de separación entre filas
-    $pdf->Ln(3); // Espacio entre filas para dar aire
+   
+    $pdf->Ln(3); 
 }
 
 // Enviar el PDF al navegador

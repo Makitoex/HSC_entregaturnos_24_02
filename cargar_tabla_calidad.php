@@ -11,13 +11,13 @@ $offset = ($page - 1) * $rowsPerPage;
 
 $conditions = [];
 if (!empty($search)) {
-    $conditions[] = "(column1 LIKE '%" . $search . "%' OR column2 LIKE '%" . $search . "%' ...)"; // Añade aquí las columnas a buscar
+    $conditions[] = "(column1 LIKE '%" . $search . "%' OR column2 LIKE '%" . $search . "%' ...)"; 
 }
 if (!empty($startDate)) {
-    $conditions[] = "fecha >= '$startDate'"; // Ajusta 'date_column' según tu base de datos
+    $conditions[] = "fecha >= '$startDate'"; 
 }
 if (!empty($endDate)) {
-    $conditions[] = "fecha <= '$endDate'"; // Ajusta 'date_column' según tu base de datos
+    $conditions[] = "fecha <= '$endDate'"; 
 }
 
 $whereClause = '';
@@ -25,9 +25,8 @@ if (count($conditions) > 0) {
     $whereClause = 'WHERE ' . implode(' AND ', $conditions);
 }
 
-// Añadir cláusula ORDER BY para ordenar por la columna de fecha en orden descendente
-$query = "SELECT * FROM $table $whereClause ORDER BY fecha DESC LIMIT $offset, $rowsPerPage"; // Ajusta 'date_column' según tu base de datos
 
+$query = "SELECT * FROM $table $whereClause ORDER BY fecha DESC LIMIT $offset, $rowsPerPage"; 
 $result = $conn->query($query);
 
 // Obtener el total de registros

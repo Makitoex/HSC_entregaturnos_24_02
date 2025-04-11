@@ -38,7 +38,7 @@ $stmt->close();
             position: fixed;
             top: 0;
             left: 0;
-            background-color: rgb(6, 60, 177); /* Fondo azul */
+            background-color: rgb(6, 60, 177); 
             padding-top: 20px;
             color: white;
             box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
@@ -83,7 +83,7 @@ $stmt->close();
         }
 
         .sidenav a:hover {
-            background-color: rgb(182, 10, 10); /* Rojo al pasar el mouse */
+            background-color: rgb(182, 10, 10); 
             border-radius: 5px;
         }
 

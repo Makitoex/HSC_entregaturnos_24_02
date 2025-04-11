@@ -30,7 +30,7 @@ $row_servicio = $result_servicio->fetch_assoc();
 $nombre_servicio = $row_servicio['nombre_servicio'] ?? "No asignado";
 $stmt->close();
 
-// Depuración: verificar el valor de $nombre_servicio
+
 echo "ONLINE: " . htmlspecialchars($nombre_servicio);
 
 if (stripos($nombre_servicio, "uti_tens") !== false) {
@@ -290,7 +290,7 @@ if (!empty($total_query)) {
     die("Error: $total_query es vacio o invalido.");
 }
 
-// Preparar y ejecutar la consulta principal
+//consulta principal
 $stmt = $conn->prepare($query);
 if (!$stmt) {
     die("Error en la preparación de la consulta: " . $conn->error);
@@ -553,19 +553,18 @@ if (stripos($nombre_servicio, "mb_microbiologia_tecnologos") !== false || stripo
         <!-- PAGINACIÓN -->
         <div style="margin-top: 40px; text-align: center;">
             <?php
-            // Solo mostrar el botón "Anterior" si no estamos en la primera página
             if ($pagina_actual > 1): ?>
                 <a href="?pagina=1" style="margin: 0 5px; padding: 5px 10px; background-color:#0056b3; color: white; text-decoration: none; border-radius: 5px;">Primero</a>
                 <a href="?pagina=<?= $pagina_actual - 1 ?>" style="margin: 0 5px; padding: 5px 10px; background-color:#0056b3; color: white; text-decoration: none; border-radius: 5px;">&laquo; Anterior</a>
             <?php endif; ?>
 
             <?php
-            // Límite de páginas visibles (máximo 4)
+            // limite de páginas visibles
             $max_visible = 4;
-            $start = max(1, $pagina_actual - 1); // Comienza una página antes de la actual
-            $end = min($total_paginas, $start + $max_visible - 1); // Calcula el rango máximo de 4 páginas
+            $start = max(1, $pagina_actual - 1);
+            $end = min($total_paginas, $start + $max_visible - 1); 
 
-            // Si el rango excede el total de páginas, ajusta el inicio
+    
             if ($end - $start + 1 < $max_visible) {
                 $start = max(1, $end - $max_visible + 1);
             }
@@ -577,7 +576,7 @@ if (stripos($nombre_servicio, "mb_microbiologia_tecnologos") !== false || stripo
             <?php endfor; ?>
 
             <?php
-            // Solo mostrar el botón "Siguiente" si no estamos en la última página
+    
             if ($pagina_actual < $total_paginas): ?>
                 <a href="?pagina=<?= $pagina_actual + 1 ?>" style="margin: 0 5px; padding: 5px 10px; background-color:#0056b3; color: white; text-decoration: none; border-radius: 5px;">Siguiente &raquo;</a>
                 <a href="?pagina=<?= $total_paginas ?>" style="margin: 0 5px; padding: 5px 10px; background-color:#0056b3; color: white; text-decoration: none; border-radius: 5px;">Último</a>
